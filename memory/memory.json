@@ -1,0 +1,816 @@
+{
+  "runs": [
+    {
+      "run_id": "20260623_152331",
+      "task_name": "attachment1.docx",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260623_152331/task_spec.json",
+      "status": "running",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-06-23T15:23:31",
+          "content": "创建运行目录: outputs/runs/20260623_152331"
+        },
+        {
+          "time": "2026-06-23T15:23:31",
+          "content": "完成输入读取与 TaskSpec 生成"
+        }
+      ],
+      "errors": [],
+      "artifacts": [],
+      "review": {}
+    },
+    {
+      "run_id": "20260623_152406",
+      "task_name": "attachment1.docx",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260623_152406/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-06-23T15:24:06",
+          "content": "创建运行目录: outputs/runs/20260623_152406"
+        },
+        {
+          "time": "2026-06-23T15:24:06",
+          "content": "完成输入读取与 TaskSpec 生成"
+        },
+        {
+          "time": "2026-06-23T15:32:47",
+          "content": "产物审查完成，状态：PASS，通过项：5/5"
+        },
+        {
+          "time": "2026-06-23T15:32:47",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260623_152406/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-06-23T15:32:47"
+        },
+        {
+          "path": "outputs/runs/20260623_152406/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-06-23T15:32:47"
+        },
+        {
+          "path": "outputs/runs/20260623_152406/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-06-23T15:32:47"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 5,
+        "total": 5,
+        "report_path": "outputs/runs/20260623_152406/review/validation_report.md"
+      },
+      "finished_at": "2026-06-23T15:32:47"
+    },
+    {
+      "run_id": "20260623_155747",
+      "task_name": "attachment1.docx",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260623_155747/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-06-23T15:57:50",
+          "content": "创建运行目录: outputs/runs/20260623_155747"
+        },
+        {
+          "time": "2026-06-23T15:57:50",
+          "content": "完成输入读取与 TaskSpec 生成"
+        },
+        {
+          "time": "2026-06-23T16:16:53",
+          "content": "产物审查完成，状态：PASS，通过项：5/5"
+        },
+        {
+          "time": "2026-06-23T16:16:53",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260623_155747/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-06-23T16:16:53"
+        },
+        {
+          "path": "outputs/runs/20260623_155747/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-06-23T16:16:53"
+        },
+        {
+          "path": "outputs/runs/20260623_155747/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-06-23T16:16:53"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 5,
+        "total": 5,
+        "report_path": "outputs/runs/20260623_155747/review/validation_report.md"
+      },
+      "finished_at": "2026-06-23T16:16:53"
+    },
+    {
+      "run_id": "20260623_195203",
+      "task_name": "attachment1.docx",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260623_195203/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-06-23T19:52:05",
+          "content": "创建运行目录: outputs/runs/20260623_195203"
+        },
+        {
+          "time": "2026-06-23T19:52:05",
+          "content": "完成输入读取与 TaskSpec 生成"
+        },
+        {
+          "time": "2026-06-23T20:04:49",
+          "content": "产物审查完成，状态：PASS，通过项：5/5"
+        },
+        {
+          "time": "2026-06-23T20:04:49",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260623_195203/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-06-23T20:04:49"
+        },
+        {
+          "path": "outputs/runs/20260623_195203/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-06-23T20:04:49"
+        },
+        {
+          "path": "outputs/runs/20260623_195203/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-06-23T20:04:49"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 5,
+        "total": 5,
+        "report_path": "outputs/runs/20260623_195203/review/validation_report.md"
+      },
+      "finished_at": "2026-06-23T20:04:49"
+    },
+    {
+      "run_id": "20260623_202828",
+      "task_name": "attachment1.docx",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260623_202828/task_spec.json",
+      "status": "running",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-06-23T20:28:28",
+          "content": "创建运行目录: outputs/runs/20260623_202828"
+        },
+        {
+          "time": "2026-06-23T20:28:28",
+          "content": "完成输入读取与 TaskSpec 生成"
+        }
+      ],
+      "errors": [],
+      "artifacts": [],
+      "review": {}
+    },
+    {
+      "run_id": "20260706_204805",
+      "task_name": "attachment1.docx",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260706_204805/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-06T20:48:06",
+          "content": "创建运行目录: outputs/runs/20260706_204805"
+        },
+        {
+          "time": "2026-07-06T20:48:06",
+          "content": "完成输入读取与 TaskSpec 生成"
+        },
+        {
+          "time": "2026-07-06T21:02:13",
+          "content": "产物审查完成，状态：PASS，通过项：5/5"
+        },
+        {
+          "time": "2026-07-06T21:02:13",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260706_204805/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-07-06T21:02:13"
+        },
+        {
+          "path": "outputs/runs/20260706_204805/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-07-06T21:02:13"
+        },
+        {
+          "path": "outputs/runs/20260706_204805/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-07-06T21:02:13"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 5,
+        "total": 5,
+        "report_path": "outputs/runs/20260706_204805/review/validation_report.md"
+      },
+      "finished_at": "2026-07-06T21:02:13"
+    },
+    {
+      "run_id": "20260706_211148",
+      "task_name": "task.md",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260706_211148/task_spec.json",
+      "status": "running",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-06T21:11:49",
+          "content": "创建运行目录: outputs/runs/20260706_211148"
+        },
+        {
+          "time": "2026-07-06T21:11:49",
+          "content": "完成输入读取与 TaskSpec 生成"
+        }
+      ],
+      "errors": [],
+      "artifacts": [],
+      "review": {}
+    },
+    {
+      "run_id": "20260706_225238",
+      "task_name": "task.md",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260706_225238/task_spec.json",
+      "status": "running",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-06T22:52:38",
+          "content": "创建运行目录: outputs/runs/20260706_225238"
+        },
+        {
+          "time": "2026-07-06T22:52:38",
+          "content": "完成输入读取、TaskSpec 生成、RunContext 构建"
+        },
+        {
+          "time": "2026-07-06T22:52:38",
+          "content": "开始多智能体执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [],
+      "review": {}
+    },
+    {
+      "run_id": "20260706_225524",
+      "task_name": "task.md",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260706_225524/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-06T22:55:25",
+          "content": "创建运行目录: outputs/runs/20260706_225524"
+        },
+        {
+          "time": "2026-07-06T22:55:25",
+          "content": "完成输入读取、TaskSpec 生成、RunContext 构建"
+        },
+        {
+          "time": "2026-07-06T22:55:25",
+          "content": "开始多智能体执行"
+        },
+        {
+          "time": "2026-07-06T23:02:50",
+          "content": "产物审查完成，状态：PASS，通过项：5/5"
+        },
+        {
+          "time": "2026-07-06T23:02:50",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260706_225524/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-07-06T23:02:50"
+        },
+        {
+          "path": "outputs/runs/20260706_225524/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-07-06T23:02:50"
+        },
+        {
+          "path": "outputs/runs/20260706_225524/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-07-06T23:02:50"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 5,
+        "total": 5,
+        "report_path": "outputs/runs/20260706_225524/review/validation_report.md"
+      },
+      "finished_at": "2026-07-06T23:02:50"
+    },
+    {
+      "run_id": "20260706_233825",
+      "task_name": "task.md",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260706_233825/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-06T23:38:27",
+          "content": "创建运行目录: outputs/runs/20260706_233825"
+        },
+        {
+          "time": "2026-07-06T23:38:27",
+          "content": "完成输入读取、TaskSpec 生成、RunContext 构建"
+        },
+        {
+          "time": "2026-07-06T23:38:28",
+          "content": "开始多智能体执行"
+        },
+        {
+          "time": "2026-07-06T23:44:17",
+          "content": "产物审查完成，状态：PASS，通过项：6/6"
+        },
+        {
+          "time": "2026-07-06T23:44:17",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260706_233825/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-07-06T23:44:17"
+        },
+        {
+          "path": "outputs/runs/20260706_233825/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-07-06T23:44:17"
+        },
+        {
+          "path": "outputs/runs/20260706_233825/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-07-06T23:44:17"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 6,
+        "total": 6,
+        "report_path": "outputs/runs/20260706_233825/review/validation_report.md"
+      },
+      "finished_at": "2026-07-06T23:44:17"
+    },
+    {
+      "run_id": "20260706_235342",
+      "task_name": "task.md",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260706_235342/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-06T23:53:42",
+          "content": "创建运行目录: outputs/runs/20260706_235342"
+        },
+        {
+          "time": "2026-07-06T23:53:42",
+          "content": "完成输入读取、TaskSpec 生成、RunContext 构建"
+        },
+        {
+          "time": "2026-07-06T23:53:43",
+          "content": "开始多智能体执行"
+        },
+        {
+          "time": "2026-07-06T23:59:12",
+          "content": "产物审查完成，状态：PASS，通过项：6/6"
+        },
+        {
+          "time": "2026-07-06T23:59:12",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260706_235342/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-07-06T23:59:12"
+        },
+        {
+          "path": "outputs/runs/20260706_235342/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-07-06T23:59:12"
+        },
+        {
+          "path": "outputs/runs/20260706_235342/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-07-06T23:59:12"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 6,
+        "total": 6,
+        "report_path": "outputs/runs/20260706_235342/review/validation_report.md"
+      },
+      "finished_at": "2026-07-06T23:59:12"
+    },
+    {
+      "run_id": "20260707_000809",
+      "task_name": "task.md",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260707_000809/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-07T00:08:09",
+          "content": "创建运行目录: outputs/runs/20260707_000809"
+        },
+        {
+          "time": "2026-07-07T00:08:09",
+          "content": "完成输入读取、TaskSpec 生成、RunContext 构建"
+        },
+        {
+          "time": "2026-07-07T00:08:10",
+          "content": "开始多智能体执行"
+        },
+        {
+          "time": "2026-07-07T00:16:57",
+          "content": "产物审查完成，状态：PASS，通过项：6/6"
+        },
+        {
+          "time": "2026-07-07T00:16:57",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260707_000809/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-07-07T00:16:57"
+        },
+        {
+          "path": "outputs/runs/20260707_000809/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-07-07T00:16:57"
+        },
+        {
+          "path": "outputs/runs/20260707_000809/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-07-07T00:16:57"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 6,
+        "total": 6,
+        "report_path": "outputs/runs/20260707_000809/review/validation_report.md"
+      },
+      "finished_at": "2026-07-07T00:16:57"
+    },
+    {
+      "run_id": "20260707_003736",
+      "task_name": "attachment1.docx",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260707_003736/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-07T00:37:37",
+          "content": "创建运行目录: outputs/runs/20260707_003736"
+        },
+        {
+          "time": "2026-07-07T00:37:37",
+          "content": "完成输入读取、TaskSpec 生成、RunContext 构建"
+        },
+        {
+          "time": "2026-07-07T00:37:37",
+          "content": "开始多智能体执行"
+        },
+        {
+          "time": "2026-07-07T00:42:59",
+          "content": "产物审查完成，状态：PARTIAL，通过项：6/7"
+        },
+        {
+          "time": "2026-07-07T00:42:59",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260707_003736/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-07-07T00:42:59"
+        },
+        {
+          "path": "outputs/runs/20260707_003736/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-07-07T00:42:59"
+        },
+        {
+          "path": "outputs/runs/20260707_003736/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-07-07T00:42:59"
+        }
+      ],
+      "review": {
+        "status": "PARTIAL",
+        "passed": 6,
+        "total": 7,
+        "report_path": "outputs/runs/20260707_003736/review/validation_report.md"
+      },
+      "finished_at": "2026-07-07T00:42:59"
+    },
+    {
+      "run_id": "20260707_103035",
+      "task_name": "task.md",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260707_103035/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-07T10:30:36",
+          "content": "创建运行目录: outputs/runs/20260707_103035"
+        },
+        {
+          "time": "2026-07-07T10:30:36",
+          "content": "完成输入读取、TaskSpec 生成、RunContext 构建"
+        },
+        {
+          "time": "2026-07-07T10:30:36",
+          "content": "开始多智能体执行"
+        },
+        {
+          "time": "2026-07-07T10:37:27",
+          "content": "产物审查完成，状态：PASS，通过项：7/7"
+        },
+        {
+          "time": "2026-07-07T10:37:27",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260707_103035/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-07-07T10:37:27"
+        },
+        {
+          "path": "outputs/runs/20260707_103035/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-07-07T10:37:27"
+        },
+        {
+          "path": "outputs/runs/20260707_103035/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-07-07T10:37:27"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 7,
+        "total": 7,
+        "report_path": "outputs/runs/20260707_103035/review/validation_report.md"
+      },
+      "finished_at": "2026-07-07T10:37:27"
+    },
+    {
+      "run_id": "20260707_112251",
+      "task_name": "task.md",
+      "task_type": "general_complex_task",
+      "task_spec_path": "outputs/runs/20260707_112251/task_spec.json",
+      "status": "completed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-07T11:22:51",
+          "content": "创建运行目录: outputs/runs/20260707_112251"
+        },
+        {
+          "time": "2026-07-07T11:22:51",
+          "content": "完成输入读取、TaskSpec 生成、RunContext 构建"
+        },
+        {
+          "time": "2026-07-07T11:22:51",
+          "content": "开始多智能体执行"
+        },
+        {
+          "time": "2026-07-07T11:29:07",
+          "content": "产物审查完成，状态：PASS，通过项：6/6"
+        },
+        {
+          "time": "2026-07-07T11:29:07",
+          "content": "系统完成任务执行"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260707_112251/agent_trace.md",
+          "description": "本次运行的多智能体执行轨迹",
+          "time": "2026-07-07T11:29:06"
+        },
+        {
+          "path": "outputs/runs/20260707_112251/final_report.md",
+          "description": "本次运行的最终报告",
+          "time": "2026-07-07T11:29:07"
+        },
+        {
+          "path": "outputs/runs/20260707_112251/review/validation_report.md",
+          "description": "本次运行的通用产物审查报告",
+          "time": "2026-07-07T11:29:07"
+        }
+      ],
+      "review": {
+        "status": "PASS",
+        "passed": 6,
+        "total": 6,
+        "report_path": "outputs/runs/20260707_112251/review/validation_report.md"
+      },
+      "finished_at": "2026-07-07T11:29:07"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+# Python cache
+__pycache__/
+*/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Runtime outputs
+outputs/
+outputs/artifacts/
+outputs/runs/
+artifacts/
+runs/
+logs/
+*.log
+
+# Secrets / local config
+.env
+.env.*
+key.md
+*.key
+*.pem
+*.secret
+config.local.py
+
+# Databases / backups
+*.db
+*.sqlite
+*.sqlite3
+*.duckdb
+backup/
+backups/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Temp
+tmp/
+temp/
+.cache/
+
+# Strange local path / drive marker
+B:
+B:/
