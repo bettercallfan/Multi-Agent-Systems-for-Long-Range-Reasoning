@@ -9,9 +9,13 @@ def create_file_surfer_model_client():
     这个模型必须真实支持 function calling / tool calling。
     """
 
+    api_key = os.getenv("FILE_SURFER_API_KEY") or os.getenv("MODEL_API_KEY") or os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("FileSurfer 需要 FILE_SURFER_API_KEY、MODEL_API_KEY 或 OPENAI_API_KEY")
+
     return OpenAIChatCompletionClient(
         model=os.getenv("FILE_SURFER_MODEL", "qwen-plus"),
-        api_key=os.getenv("FILE_SURFER_API_KEY"),
+        api_key=api_key,
         base_url=os.getenv("FILE_SURFER_BASE_URL", None),
         model_info={
             "vision": False,

@@ -4,10 +4,8 @@ from autogen_ext.agents.file_surfer import FileSurfer
 from agents.planning_agent import create_planning_agent
 from agents.research_agent import create_research_agent
 from agents.reasoning_agent import create_reasoning_agent
-from agents.report_agent import create_report_agent
-from agents.review_agent import create_review_agent
 from agents.error_agent import create_error_agent
-from agents.code_agents import create_code_agents
+from agents.code_agents import create_code_modeling_agent
 
 
 def create_base_team(model_client, work_dir, file_model_client=None, run_context=None):
@@ -28,15 +26,10 @@ def create_base_team(model_client, work_dir, file_model_client=None, run_context
         base_path=str(work_dir),
     )
 
-    code_modeling_agent, code_executor_agent = create_code_agents(
-        model_client=model_client,
-        work_dir=work_dir,
-    )
+    code_modeling_agent = create_code_modeling_agent(model_client)
 
     reasoning_agent = create_reasoning_agent(model_client, extra_context=extra_context)
-    review_agent = create_review_agent(model_client, extra_context=extra_context)
     error_agent = create_error_agent(model_client, extra_context=extra_context)
-    report_agent = create_report_agent(model_client, extra_context=extra_context)
 
     return MagenticOneGroupChat(
         participants=[
@@ -44,11 +37,8 @@ def create_base_team(model_client, work_dir, file_model_client=None, run_context
             file_surfer,
             research_agent,
             code_modeling_agent,
-            code_executor_agent,
             reasoning_agent,
-            review_agent,
             error_agent,
-            report_agent,
         ],
         model_client=model_client,
     )

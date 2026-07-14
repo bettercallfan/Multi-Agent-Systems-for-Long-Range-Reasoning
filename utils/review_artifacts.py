@@ -1,220 +1,221 @@
-from pathlib import Path
+"""Deterministic pre-report review and final delivery validation."""
+
+from __future__ import annotations
+
 from datetime import datetime
+import json
+from pathlib import Path
+import re
+
+from orchestration.schemas import ArtifactQualityResult, ReviewDecision
+from task_plugins.base import load_strict_json
+
+
+_FORBIDDEN_REPORT_PATTERNS = {
+    "执行轨迹": r"agent_trace|execution trace|执行轨迹",
+    "Agent 内部名称": r"(?:TaskPlanning|CodeModeling|CodeExecutor|ErrorAttribution|Review|Report|FileSurfer)Agent",
+    "Mermaid 系统图": r"sequenceDiagram|\bgantt\b",
+}
+
+
+def _validate_json_files(run_dir: Path, paths: list[str]) -> list[str]:
+    issues = []
+    for relative in paths:
+        if not relative.lower().endswith(".json"):
+            continue
+        path = run_dir / relative
+        if not path.is_file():
+            continue
+        try:
+            load_strict_json(path)
+        except (OSError, ValueError) as exc:
+            issues.append(f"JSON 产物无法解析：{relative}（{exc}）")
+    return issues
+
+
+def pre_report_review(
+    task_spec: dict,
+    run_state: dict,
+    artifact_quality: ArtifactQualityResult | dict | None = None,
+) -> ReviewDecision:
+    run_dir = Path(task_spec["run_dir"])
+    contract = task_spec.get("artifact_contract", {})
+    if "intermediate_artifacts" in contract:
+        required = contract["intermediate_artifacts"]
+    else:
+        required = [
+            path for path in task_spec.get("required_artifacts", [])
+            if path != "final_report.md"
+            and path not in {"task_spec.json", "agent_trace.md", "run_state.json", "file_previews.json"}
+        ]
+    missing = [path for path in required if not (run_dir / path).is_file()]
+    issues = [f"缺少报告前必需产物：{path}" for path in missing]
+    issues.extend(_validate_json_files(run_dir, required))
+
+    execution = run_state.get("execution", {})
+    code_mode = task_spec.get("code_policy", {}).get("mode", "none")
+    execution_failed = code_mode != "none" and execution.get("exit_code") != 0
+    if execution_failed:
+        issues.append(f"代码执行退出码非零：{execution.get('exit_code')}")
+
+    graph_failed = run_state.get("graph_outcome") == "failed"
+    failed_nodes = sorted(
+        node_id for node_id, node in run_state.get("nodes", {}).items()
+        if node.get("status") in {"failed", "blocked"}
+    )
+    if graph_failed:
+        issues.append("动态任务图执行失败")
+    if failed_nodes:
+        issues.append("未成功完成的任务图节点：" + ", ".join(failed_nodes))
+
+    if artifact_quality is not None:
+        quality = (
+            artifact_quality
+            if isinstance(artifact_quality, ArtifactQualityResult)
+            else ArtifactQualityResult.model_validate(artifact_quality)
+        )
+        if quality.status == "failed":
+            issues.extend(quality.issues)
+
+    critical = bool(
+        missing
+        or any(issue.startswith("JSON 产物无法解析") for issue in issues)
+        or (artifact_quality is not None and quality.status == "failed")
+        or graph_failed
+        or bool(failed_nodes)
+    )
+    if critical:
+        status = "failed"
+        can_report = False
+    elif execution_failed:
+        status = "partial"
+        can_report = True
+    else:
+        status = "passed"
+        can_report = True
+
+    return ReviewDecision(
+        status=status,
+        can_generate_final_report=can_report,
+        issues=issues,
+        required_artifacts_checked=required,
+    )
+
+
+def merge_review_decisions(framework: ReviewDecision, semantic: ReviewDecision) -> ReviewDecision:
+    """Merge decisions conservatively; an LLM can never upgrade framework evidence."""
+    rank = {"passed": 0, "partial": 1, "failed": 2}
+    status = framework.status if rank[framework.status] >= rank[semantic.status] else semantic.status
+    can_report = framework.can_generate_final_report and semantic.can_generate_final_report and status != "failed"
+    return ReviewDecision(
+        status=status,
+        can_generate_final_report=can_report,
+        issues=list(dict.fromkeys(framework.issues + semantic.issues)),
+        required_artifacts_checked=list(dict.fromkeys(
+            framework.required_artifacts_checked + semantic.required_artifacts_checked
+        )),
+    )
+
+
+def final_validation(task_spec: dict, run_state: dict) -> ReviewDecision:
+    run_dir = Path(task_spec["run_dir"])
+    contract = task_spec.get("artifact_contract", {})
+    required = list(dict.fromkeys(
+        contract.get("intermediate_artifacts", [])
+        + contract.get("final_artifacts", [])
+        + contract.get("framework_artifacts", [])
+    )) or task_spec.get("required_artifacts", [])
+    missing = [path for path in required if not (run_dir / path).is_file()]
+    issues = [f"缺少最终必需产物：{path}" for path in missing]
+    issues.extend(_validate_json_files(run_dir, required))
+
+    report_path = run_dir / "final_report.md"
+    content = ""
+    if report_path.is_file():
+        content = report_path.read_text(encoding="utf-8", errors="replace").strip()
+        if len(content) < 200:
+            issues.append(f"final_report.md 内容过短：{len(content)} 字符")
+        if content.startswith("# task_spec.json") or content.startswith("```json"):
+            issues.append("final_report.md 实际内容是 TaskSpec/JSON，不是业务报告")
+        for section in task_spec.get("required_report_sections", []):
+            if section not in content:
+                issues.append(f"final_report.md 缺少必需章节：{section}")
+        for label, pattern in _FORBIDDEN_REPORT_PATTERNS.items():
+            if re.search(pattern, content, re.IGNORECASE):
+                issues.append(f"final_report.md 包含禁止内容：{label}")
+        for reference in set(re.findall(r"artifacts/[\w\-./]+", content)):
+            clean = reference.rstrip("`。，、；;:：)）]")
+            if not (run_dir / clean).exists():
+                issues.append(f"报告引用了不存在的产物：{clean}")
+
+    previous = run_state.get("review", {})
+    execution_failed = (
+        task_spec.get("code_policy", {}).get("mode", "none") != "none"
+        and run_state.get("execution", {}).get("exit_code") != 0
+    )
+    graph_failed = run_state.get("graph_outcome") == "failed"
+    failed_nodes = sorted(
+        node_id for node_id, node in run_state.get("nodes", {}).items()
+        if node.get("status") in {"failed", "blocked"}
+    )
+    if graph_failed:
+        issues.append("动态任务图执行失败")
+    if failed_nodes:
+        issues.append("未成功完成的任务图节点：" + ", ".join(failed_nodes))
+    if missing or issues:
+        status = "failed"
+    elif execution_failed or previous.get("status") == "partial":
+        status = "partial"
+    else:
+        status = "passed"
+
+    return ReviewDecision(
+        status=status,
+        can_generate_final_report=report_path.is_file() and status != "failed",
+        issues=issues,
+        required_artifacts_checked=required,
+    )
+
+
+def write_validation_report(run_dir: Path, decision: ReviewDecision, run_state: dict) -> str:
+    path = run_dir / "review" / "validation_report.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    lines = [
+        "# 框架最终验收报告",
+        "",
+        f"- 验收时间：{datetime.now().isoformat(timespec='seconds')}",
+        f"- 验收状态：**{decision.status.upper()}**",
+        f"- 代码退出码：{run_state.get('execution', {}).get('exit_code')}",
+        f"- 是否允许交付报告：{'是' if decision.can_generate_final_report else '否'}",
+        f"- 产物质量：{(run_state.get('artifact_quality', {}).get('current') or {}).get('status', 'unknown')}",
+        f"- 当前失败路由：{(run_state.get('failure') or {}).get('resume_stage', '无')}",
+        "",
+        "## 必需产物",
+        "",
+    ]
+    for relative in decision.required_artifacts_checked:
+        exists = (run_dir / relative).is_file()
+        lines.append(f"- {'✅' if exists else '❌'} {relative}")
+    lines.extend(["", "## 问题", ""])
+    lines.extend(f"- {issue}" for issue in decision.issues)
+    if not decision.issues:
+        lines.append("- 未发现阻断性问题")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path.relative_to(run_dir).as_posix()
 
 
 def review_artifacts(task_spec: dict):
-    """
-    通用产物审查。
-
-    在文件存在性检查基础上，参考 run_state.json 的 outcome，
-    避免在明显失败、降级或结果为空时仍然机械 PASS。
-    """
+    """Compatibility wrapper that performs final validation from persisted state."""
     run_dir = Path(task_spec["run_dir"])
-
-    checks = []
-
-    # --- 基础文件存在性检查 ---
-
-    expected_files = [
-        run_dir / "task_spec.json",
-        run_dir / "agent_trace.md",
-        run_dir / "final_report.md",
-    ]
-
-    for path in expected_files:
-        checks.append({
-            "item": f"{path.name} 是否存在",
-            "passed": path.exists(),
-            "detail": str(path)
-        })
-
-    artifacts_dir = run_dir / "artifacts"
-    review_dir = run_dir / "review"
-
-    checks.append({
-        "item": "artifacts 目录是否存在",
-        "passed": artifacts_dir.exists(),
-        "detail": str(artifacts_dir)
-    })
-
-    checks.append({
-        "item": "review 目录是否存在",
-        "passed": review_dir.exists(),
-        "detail": str(review_dir)
-    })
-
-    base_passed = sum(1 for x in checks if x["passed"])
-    base_total = len(checks)
-
-    # --- 读取 RunState 做语义判断 ---
-
-    run_state_path = run_dir / "run_state.json"
-    run_state = {}
-    if run_state_path.exists():
-        try:
-            import json
-            run_state = json.loads(run_state_path.read_text(encoding="utf-8"))
-        except Exception:
-            pass
-
-    outcome = run_state.get("outcome", "unknown")
-    fallback = run_state.get("fallback_triggered", False)
-    fallback_reason = run_state.get("fallback_reason", "")
-    report_source = run_state.get("final_report_source", "")
-    artifacts_found = run_state.get("artifacts_found", [])
-    artifacts_missing = run_state.get("artifacts_missing", [])
-    code_retries = run_state.get("code_retry_count", 0)
-    agents_called = run_state.get("agents_called", [])
-
-    # --- 语义检查项 ---
-
-    # 1. 最终报告是否由 ReportAgent 生成
-    if report_source and report_source != "ReportAgent":
-        checks.append({
-            "item": f"最终报告由 ReportAgent 生成（实际来源: {report_source}）",
-            "passed": False,
-            "detail": f"报告由 {report_source} 生成，非 ReportAgent"
-        })
-    elif report_source == "ReportAgent":
-        checks.append({
-            "item": "最终报告由 ReportAgent 生成",
-            "passed": True,
-            "detail": "来源正确"
-        })
-
-    # 2. 降级检查
-    if fallback:
-        checks.append({
-            "item": f"降级机制触发（{fallback_reason}）",
-            "passed": True,  # 降级本身不算失败
-            "detail": "系统在代码多轮失败后正确降级，基于已有产物继续"
-        })
-
-    # 3. 产物为空 — 尊重 code_policy，不强制所有任务都要代码产物
-    code_policy = task_spec.get("code_policy", {})
-    allows_code = code_policy.get("allows_complex", True) or code_policy.get("allows_lightweight", True)
-    if not artifacts_found and artifacts_dir.exists():
-        has_files = any(artifacts_dir.iterdir())
-        if not has_files:
-            if allows_code:
-                checks.append({
-                    "item": "产物目录为空（code_policy 允许代码但未生成任何产物）",
-                    "passed": False,
-                    "detail": str(artifacts_dir)
-                })
-            else:
-                checks.append({
-                    "item": "产物目录为空（code_policy 不要求代码，此为正常状态）",
-                    "passed": True,
-                    "detail": "code_policy 不要求代码产物"
-                })
-
-    # 4. ReportAgent 从未被调用但任务需要报告
-    if "ReportAgent" not in agents_called and agents_called:
-        checks.append({
-            "item": "ReportAgent 是否被调用",
-            "passed": False,
-            "detail": f"已调用: {', '.join(agents_called)}"
-        })
-
-    # --- 内容质量检查 ---
-
-    # 5. 检查 final_report.md 内容是否过短（可能是空壳或拒绝生成）
-    final_report_path = run_dir / "final_report.md"
-    if final_report_path.exists():
-        try:
-            content = final_report_path.read_text(encoding="utf-8")
-            content_len = len(content.strip())
-            if content_len < 200:
-                checks.append({
-                    "item": "final_report.md 内容过短（可能为空壳或未完成）",
-                    "passed": False,
-                    "detail": f"内容仅 {content_len} 字符"
-                })
-            else:
-                # 5b. 检查是否包含禁止的虚构内容
-                forbidden_patterns = [
-                    ("Mermaid 序列图", "sequenceDiagram"),
-                    ("Mermaid 甘特图", "gantt"),
-                    ("虚构的 agent_trace 章节", "## Step 1:"),
-                    ("Agent 调用统计表", "调用次数"),
-                ]
-                for label, pattern in forbidden_patterns:
-                    if pattern in content:
-                        checks.append({
-                            "item": f"报告含禁止内容：{label}",
-                            "passed": False,
-                            "detail": f"final_report.md 中检测到 \"{pattern}\""
-                        })
-        except Exception:
-            pass
-
-    # --- 综合判断 ---
-
-    passed = sum(1 for x in checks if x["passed"])
-    total = len(checks)
-
-    # 使用 code_policy 判断代码要求
-    code_policy = task_spec.get("code_policy", {})
-    requires_code = code_policy.get("allows_complex", True) or code_policy.get("allows_lightweight", True)
-
-    if outcome == "failed" or not run_state.get("final_report_generated", True):
-        status = "FAIL"
-    elif outcome == "fallback":
-        status = "PARTIAL"
-    elif outcome == "partial":
-        status = "PARTIAL"
-    elif fallback:
-        status = "PARTIAL"
-    elif report_source and report_source != "ReportAgent":
-        status = "PARTIAL"
-    elif passed == total and base_passed == base_total:
-        status = "PASS"
-    elif base_passed == base_total and not requires_code:
-        # code_policy 不要求代码：基础文件齐全就是分析完成
-        status = "PASS_ANALYSIS_ONLY"
-    elif base_passed == base_total:
-        status = "PARTIAL"
-    else:
-        status = "FAIL"
-
-    # --- 生成审查报告 ---
-
-    report_path = review_dir / "validation_report.md"
-
-    lines = [
-        "# 通用产物审查报告\n",
-        f"- 审查时间：{datetime.now().isoformat(timespec='seconds')}",
-        f"- 审查状态：**{status}**",
-        f"- 通过项：{passed}/{total}",
-        f"- 基础检查：{base_passed}/{base_total}",
-    ]
-
-    if run_state:
-        lines.extend([
-            "",
-            f"- 运行结果(outcome)：{outcome}",
-            f"- 是否降级：{'是' if fallback else '否'}",
-            f"- 报告来源：{report_source or '无'}",
-            f"- 已调用 Agent：{', '.join(agents_called) if agents_called else '无'}",
-            f"- 产物数：{len(artifacts_found)}",
-            f"- 代码重试：{code_retries} 轮",
-        ])
-
-    lines.extend([
-        "",
-        "## 检查明细\n"
-    ])
-
-    for item in checks:
-        mark = "✅" if item["passed"] else "❌"
-        lines.append(f"- {mark} {item['item']}：{item['detail']}")
-
-    report_path.write_text("\n".join(lines), encoding="utf-8")
-
+    state_path = run_dir / "run_state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
+    decision = final_validation(task_spec, state)
+    report_path = write_validation_report(run_dir, decision, state)
     return {
-        "status": status,
-        "passed": passed,
-        "total": total,
-        "report_path": str(report_path)
+        "status": decision.status.upper(),
+        "passed": len(decision.required_artifacts_checked) - len([
+            p for p in decision.required_artifacts_checked if not (run_dir / p).is_file()
+        ]),
+        "total": len(decision.required_artifacts_checked),
+        "report_path": str(run_dir / report_path),
     }

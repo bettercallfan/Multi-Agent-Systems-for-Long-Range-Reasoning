@@ -44,30 +44,30 @@ def read_xlsx(path: str):
     try:
         import pandas as pd
 
-        excel = pd.ExcelFile(path, engine="openpyxl")
-        result["sheets"] = excel.sheet_names
+        with pd.ExcelFile(path, engine="openpyxl") as excel:
+            result["sheets"] = excel.sheet_names
 
-        for sheet in excel.sheet_names:
-            df = pd.read_excel(excel, sheet_name=sheet)
+            for sheet in excel.sheet_names:
+                df = pd.read_excel(excel, sheet_name=sheet)
 
-            sample = df.head(5).fillna("")
-            # Pandas 3.x 兼容：优先 map，fallback applymap
-            def _safe_convert(x):
-                if hasattr(x, "isoformat"):
-                    return x.isoformat()
-                return x
+                sample = df.head(5).fillna("")
+                # Pandas 3.x 兼容：优先 map，fallback applymap
+                def _safe_convert(x):
+                    if hasattr(x, "isoformat"):
+                        return x.isoformat()
+                    return x
 
-            try:
-                sample = sample.map(_safe_convert)
-            except AttributeError:
-                sample = sample.applymap(_safe_convert)
+                try:
+                    sample = sample.map(_safe_convert)
+                except AttributeError:
+                    sample = sample.applymap(_safe_convert)
 
-            result["sheet_summaries"][sheet] = {
-                "rows": int(len(df)),
-                "columns": [str(c) for c in df.columns],
-                "dtypes": {str(k): str(v) for k, v in df.dtypes.items()},
-                "sample_rows": sample.to_dict(orient="records"),
-            }
+                result["sheet_summaries"][sheet] = {
+                    "rows": int(len(df)),
+                    "columns": [str(c) for c in df.columns],
+                    "dtypes": {str(k): str(v) for k, v in df.dtypes.items()},
+                    "sample_rows": sample.to_dict(orient="records"),
+                }
 
         result["status"] = "success"
 

@@ -1,74 +1,82 @@
+"""Framework-owned persistence for reports and execution traces."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+import json
 from pathlib import Path
+from typing import Any
+
+from pydantic import BaseModel
 
 
-def get_last_text_message(messages):
-    for msg in reversed(messages):
-        content = getattr(msg, "content", None)
-        if isinstance(content, str) and content.strip():
+@dataclass
+class TraceEvent:
+    source: str
+    content: Any
+    type: str = "FrameworkEvent"
+
+
+def content_to_text(content: Any) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, BaseModel):
+        return json.dumps(content.model_dump(), ensure_ascii=False, indent=2)
+    if isinstance(content, (dict, list)):
+        return json.dumps(content, ensure_ascii=False, indent=2)
+    return str(content)
+
+
+def get_last_content(messages) -> Any:
+    for message in reversed(messages):
+        content = getattr(message, "content", None)
+        if content is not None and content_to_text(content).strip():
             return content
     return ""
 
 
+def get_last_text_message(messages):
+    return content_to_text(get_last_content(messages))
+
+
 def get_last_text_from_source(messages, source_name):
-    for msg in reversed(messages):
-        source = getattr(msg, "source", "")
-        content = getattr(msg, "content", None)
-
-        if source == source_name and isinstance(content, str) and content.strip():
-            return content
-
+    for message in reversed(messages):
+        if getattr(message, "source", "") == source_name:
+            text = content_to_text(getattr(message, "content", ""))
+            if text.strip():
+                return text
     return ""
 
 
 def get_final_report(messages):
-    """
-    优先保存 ReportAgent 的正式报告。
-    如果 ReportAgent 没有输出，再退回最后一条文本消息。
-    """
     report = get_last_text_from_source(messages, "ReportAgent")
-    if report:
-        return report
-
-    return get_last_text_message(messages)
+    return report or get_last_text_message(messages)
 
 
 def save_agent_trace(messages, path="outputs/agent_trace.md"):
-    from pathlib import Path
-
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-
-    lines = []
-
-    allowed_types = {
-        "TextMessage",
-        "CodeExecutionEvent",
-        "CodeGenerationEvent",
-    }
-
-    for i, msg in enumerate(messages, 1):
-        msg_type = msg.__class__.__name__
-
-        if msg_type not in allowed_types:
+    lines = ["# 框架执行轨迹", ""]
+    for index, message in enumerate(messages, 1):
+        source = getattr(message, "source", "unknown")
+        msg_type = getattr(message, "type", message.__class__.__name__)
+        if msg_type in {"ThoughtEvent", "ModelClientStreamingChunkEvent"}:
             continue
-
-        source = getattr(msg, "source", "unknown")
-        content = getattr(msg, "content", "")
-
-        if not isinstance(content, str):
-            content = str(content)
-
+        content = content_to_text(getattr(message, "content", ""))
         if not content.strip():
             continue
-
-        lines.append(f"## Step {i}: {source} / {msg_type}\n")
-        lines.append(content)
-        lines.append("\n---\n")
-
+        lines.extend([
+            f"## Step {index}: {source} / {msg_type}",
+            "",
+            content,
+            "",
+            "---",
+            "",
+        ])
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def save_final_report(text, path="outputs/final_report.md"):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8")
+    path.write_text(text.strip() + "\n", encoding="utf-8")

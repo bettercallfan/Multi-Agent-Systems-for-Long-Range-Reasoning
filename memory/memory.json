@@ -811,6 +811,863 @@
         "report_path": "outputs/runs/20260707_112251/review/validation_report.md"
       },
       "finished_at": "2026-07-07T11:29:07"
+    },
+    {
+      "run_id": "20260714_164709",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260714_164709/task_spec.json",
+      "status": "failed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-14T16:47:10",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        }
+      ],
+      "errors": [
+        {
+          "time": "2026-07-14T16:47:10",
+          "error_type": "workflow",
+          "message": "请先设置 MODEL_API_KEY 或 OPENAI_API_KEY",
+          "fix": "查看 run_state.json 和 agent_trace.md"
+        }
+      ],
+      "artifacts": [],
+      "review": {},
+      "finished_at": "2026-07-14T16:47:10"
+    },
+    {
+      "run_id": "20260714_164832",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260714_164832/task_spec.json",
+      "status": "failed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-14T16:48:33",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        }
+      ],
+      "errors": [
+        {
+          "time": "2026-07-14T16:48:33",
+          "error_type": "workflow",
+          "message": "model_info is required when model name is not a valid OpenAI model",
+          "fix": "查看 run_state.json 和 agent_trace.md"
+        }
+      ],
+      "artifacts": [],
+      "review": {},
+      "finished_at": "2026-07-14T16:48:33"
+    },
+    {
+      "run_id": "20260714_165107",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260714_165107/task_spec.json",
+      "status": "failed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-14T16:51:07",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        },
+        {
+          "time": "2026-07-14T16:53:32",
+          "content": "最终验收完成：failed"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260714_165107/agent_trace.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T16:53:32"
+        },
+        {
+          "path": "outputs/runs/20260714_165107/artifacts/code_pipeline.py",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T16:53:32"
+        },
+        {
+          "path": "outputs/runs/20260714_165107/file_previews.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T16:53:32"
+        },
+        {
+          "path": "outputs/runs/20260714_165107/review/validation_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T16:53:32"
+        },
+        {
+          "path": "outputs/runs/20260714_165107/run_state.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T16:53:32"
+        },
+        {
+          "path": "outputs/runs/20260714_165107/task_spec.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T16:53:32"
+        }
+      ],
+      "review": {
+        "status": "failed",
+        "can_generate_final_report": false,
+        "issues": [
+          "缺少最终必需产物：artifacts/expense_summary.json",
+          "缺少最终必需产物：final_report.md"
+        ],
+        "required_artifacts_checked": [
+          "artifacts/expense_summary.json",
+          "artifacts/code_pipeline.py",
+          "task_spec.json",
+          "agent_trace.md",
+          "final_report.md"
+        ]
+      },
+      "finished_at": "2026-07-14T16:53:32"
+    },
+    {
+      "run_id": "20260714_171854",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260714_171854/task_spec.json",
+      "status": "failed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-14T17:18:54",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        },
+        {
+          "time": "2026-07-14T17:21:19",
+          "content": "最终验收完成：failed"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260714_171854/agent_trace.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:21:19"
+        },
+        {
+          "path": "outputs/runs/20260714_171854/artifacts/code_pipeline.py",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:21:19"
+        },
+        {
+          "path": "outputs/runs/20260714_171854/artifacts/expense_summary.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:21:19"
+        },
+        {
+          "path": "outputs/runs/20260714_171854/file_previews.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:21:19"
+        },
+        {
+          "path": "outputs/runs/20260714_171854/review/validation_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:21:19"
+        },
+        {
+          "path": "outputs/runs/20260714_171854/run_state.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:21:19"
+        },
+        {
+          "path": "outputs/runs/20260714_171854/task_spec.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:21:19"
+        }
+      ],
+      "review": {
+        "status": "failed",
+        "can_generate_final_report": false,
+        "issues": [
+          "缺少最终必需产物：final_report.md"
+        ],
+        "required_artifacts_checked": [
+          "artifacts/expense_summary.json",
+          "artifacts/code_pipeline.py",
+          "task_spec.json",
+          "agent_trace.md",
+          "final_report.md"
+        ]
+      },
+      "finished_at": "2026-07-14T17:21:19"
+    },
+    {
+      "run_id": "20260714_173543",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260714_173543/task_spec.json",
+      "status": "failed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-14T17:35:44",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        },
+        {
+          "time": "2026-07-14T17:37:24",
+          "content": "最终验收完成：failed"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260714_173543/agent_trace.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:37:24"
+        },
+        {
+          "path": "outputs/runs/20260714_173543/artifacts/code_pipeline.py",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:37:24"
+        },
+        {
+          "path": "outputs/runs/20260714_173543/artifacts/expense_summary.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:37:24"
+        },
+        {
+          "path": "outputs/runs/20260714_173543/file_previews.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:37:24"
+        },
+        {
+          "path": "outputs/runs/20260714_173543/review/validation_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:37:24"
+        },
+        {
+          "path": "outputs/runs/20260714_173543/run_state.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:37:24"
+        },
+        {
+          "path": "outputs/runs/20260714_173543/task_spec.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:37:24"
+        }
+      ],
+      "review": {
+        "status": "failed",
+        "can_generate_final_report": false,
+        "issues": [
+          "缺少最终必需产物：final_report.md"
+        ],
+        "required_artifacts_checked": [
+          "artifacts/expense_summary.json",
+          "artifacts/code_pipeline.py",
+          "final_report.md",
+          "task_spec.json",
+          "agent_trace.md",
+          "run_state.json",
+          "file_previews.json"
+        ]
+      },
+      "finished_at": "2026-07-14T17:37:24"
+    },
+    {
+      "run_id": "20260714_174337",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260714_174337/task_spec.json",
+      "status": "failed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-14T17:43:38",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        },
+        {
+          "time": "2026-07-14T17:44:41",
+          "content": "最终验收完成：failed"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260714_174337/agent_trace.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:44:41"
+        },
+        {
+          "path": "outputs/runs/20260714_174337/file_previews.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:44:41"
+        },
+        {
+          "path": "outputs/runs/20260714_174337/normalized_input.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:44:41"
+        },
+        {
+          "path": "outputs/runs/20260714_174337/review/validation_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:44:41"
+        },
+        {
+          "path": "outputs/runs/20260714_174337/run_state.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:44:41"
+        },
+        {
+          "path": "outputs/runs/20260714_174337/task_spec.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T17:44:41"
+        }
+      ],
+      "review": {
+        "status": "failed",
+        "can_generate_final_report": false,
+        "issues": [
+          "缺少最终必需产物：artifacts/expense_summary.json",
+          "缺少最终必需产物：artifacts/code_pipeline.py",
+          "缺少最终必需产物：final_report.md"
+        ],
+        "required_artifacts_checked": [
+          "artifacts/expense_summary.json",
+          "artifacts/code_pipeline.py",
+          "final_report.md",
+          "task_spec.json",
+          "agent_trace.md",
+          "run_state.json",
+          "file_previews.json",
+          "normalized_input.json"
+        ]
+      },
+      "finished_at": "2026-07-14T17:44:41"
+    },
+    {
+      "run_id": "20260714_182654",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260714_182654/task_spec.json",
+      "status": "success",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-14T18:26:55",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        },
+        {
+          "time": "2026-07-14T18:30:29",
+          "content": "最终验收完成：passed"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260714_182654/agent_trace.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:30:28"
+        },
+        {
+          "path": "outputs/runs/20260714_182654/artifacts/code_pipeline.py",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:30:28"
+        },
+        {
+          "path": "outputs/runs/20260714_182654/artifacts/expense_summary.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:30:28"
+        },
+        {
+          "path": "outputs/runs/20260714_182654/file_previews.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:30:28"
+        },
+        {
+          "path": "outputs/runs/20260714_182654/final_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:30:28"
+        },
+        {
+          "path": "outputs/runs/20260714_182654/normalized_input.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:30:29"
+        },
+        {
+          "path": "outputs/runs/20260714_182654/review/validation_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:30:29"
+        },
+        {
+          "path": "outputs/runs/20260714_182654/run_state.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:30:29"
+        },
+        {
+          "path": "outputs/runs/20260714_182654/task_spec.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:30:29"
+        }
+      ],
+      "review": {
+        "status": "passed",
+        "can_generate_final_report": true,
+        "issues": [],
+        "required_artifacts_checked": [
+          "artifacts/expense_summary.json",
+          "artifacts/code_pipeline.py",
+          "final_report.md",
+          "task_spec.json",
+          "agent_trace.md",
+          "run_state.json",
+          "file_previews.json",
+          "normalized_input.json"
+        ]
+      },
+      "finished_at": "2026-07-14T18:30:29"
+    },
+    {
+      "run_id": "20260714_183310",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260714_183310/task_spec.json",
+      "status": "success",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-14T18:33:14",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        },
+        {
+          "time": "2026-07-14T18:36:20",
+          "content": "最终验收完成：passed"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260714_183310/agent_trace.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:36:19"
+        },
+        {
+          "path": "outputs/runs/20260714_183310/artifacts/code_pipeline.py",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:36:19"
+        },
+        {
+          "path": "outputs/runs/20260714_183310/artifacts/expense_summary.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:36:19"
+        },
+        {
+          "path": "outputs/runs/20260714_183310/file_previews.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:36:19"
+        },
+        {
+          "path": "outputs/runs/20260714_183310/final_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:36:19"
+        },
+        {
+          "path": "outputs/runs/20260714_183310/normalized_input.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:36:19"
+        },
+        {
+          "path": "outputs/runs/20260714_183310/review/validation_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:36:20"
+        },
+        {
+          "path": "outputs/runs/20260714_183310/run_state.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:36:20"
+        },
+        {
+          "path": "outputs/runs/20260714_183310/task_spec.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T18:36:20"
+        }
+      ],
+      "review": {
+        "status": "passed",
+        "can_generate_final_report": true,
+        "issues": [],
+        "required_artifacts_checked": [
+          "artifacts/expense_summary.json",
+          "artifacts/code_pipeline.py",
+          "final_report.md",
+          "task_spec.json",
+          "agent_trace.md",
+          "run_state.json",
+          "file_previews.json",
+          "normalized_input.json"
+        ]
+      },
+      "finished_at": "2026-07-14T18:36:20"
+    },
+    {
+      "run_id": "20260714_235441",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260714_235441/task_spec.json",
+      "status": "failed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-14T23:54:42",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        },
+        {
+          "time": "2026-07-14T23:58:27",
+          "content": "最终验收完成：failed"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260714_235441/agent_trace.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T23:58:26"
+        },
+        {
+          "path": "outputs/runs/20260714_235441/artifacts/code_pipeline.py",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T23:58:26"
+        },
+        {
+          "path": "outputs/runs/20260714_235441/artifacts/expense_summary.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T23:58:26"
+        },
+        {
+          "path": "outputs/runs/20260714_235441/file_previews.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T23:58:26"
+        },
+        {
+          "path": "outputs/runs/20260714_235441/normalized_input.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T23:58:26"
+        },
+        {
+          "path": "outputs/runs/20260714_235441/review/validation_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T23:58:26"
+        },
+        {
+          "path": "outputs/runs/20260714_235441/run_state.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T23:58:26"
+        },
+        {
+          "path": "outputs/runs/20260714_235441/task_graph.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T23:58:26"
+        },
+        {
+          "path": "outputs/runs/20260714_235441/task_spec.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-14T23:58:26"
+        }
+      ],
+      "review": {
+        "status": "failed",
+        "can_generate_final_report": false,
+        "issues": [
+          "缺少最终必需产物：final_report.md",
+          "动态任务图执行失败",
+          "未成功完成的任务图节点：n006_generate_code_pipeline, n007_validate_all_artifacts"
+        ],
+        "required_artifacts_checked": [
+          "artifacts/expense_summary.json",
+          "artifacts/code_pipeline.py",
+          "final_report.md",
+          "task_spec.json",
+          "agent_trace.md",
+          "run_state.json",
+          "file_previews.json",
+          "normalized_input.json",
+          "task_graph.json"
+        ]
+      },
+      "finished_at": "2026-07-14T23:58:27"
+    },
+    {
+      "run_id": "20260715_000035",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260715_000035/task_spec.json",
+      "status": "failed",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-15T00:00:35",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        },
+        {
+          "time": "2026-07-15T00:02:06",
+          "content": "最终验收完成：failed"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260715_000035/agent_trace.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:02:05"
+        },
+        {
+          "path": "outputs/runs/20260715_000035/artifacts/code_pipeline.py",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:02:06"
+        },
+        {
+          "path": "outputs/runs/20260715_000035/artifacts/expense_summary.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:02:06"
+        },
+        {
+          "path": "outputs/runs/20260715_000035/file_previews.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:02:06"
+        },
+        {
+          "path": "outputs/runs/20260715_000035/normalized_input.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:02:06"
+        },
+        {
+          "path": "outputs/runs/20260715_000035/review/validation_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:02:06"
+        },
+        {
+          "path": "outputs/runs/20260715_000035/run_state.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:02:06"
+        },
+        {
+          "path": "outputs/runs/20260715_000035/task_graph.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:02:06"
+        },
+        {
+          "path": "outputs/runs/20260715_000035/task_spec.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:02:06"
+        }
+      ],
+      "review": {
+        "status": "failed",
+        "can_generate_final_report": false,
+        "issues": [
+          "缺少最终必需产物：final_report.md",
+          "动态任务图执行失败",
+          "未成功完成的任务图节点：n3_gen_code_summary, n4_validate_artifacts"
+        ],
+        "required_artifacts_checked": [
+          "artifacts/expense_summary.json",
+          "artifacts/code_pipeline.py",
+          "final_report.md",
+          "task_spec.json",
+          "agent_trace.md",
+          "run_state.json",
+          "file_previews.json",
+          "normalized_input.json",
+          "task_graph.json"
+        ]
+      },
+      "finished_at": "2026-07-15T00:02:06"
+    },
+    {
+      "run_id": "20260715_000353",
+      "task_name": "员工出差报销资料整理任务",
+      "task_type": "document_analysis",
+      "task_spec_path": "outputs/runs/20260715_000353/task_spec.json",
+      "status": "success",
+      "task_graph": [
+        "INPUT: 读取用户输入",
+        "NORMALIZE: 生成内部 TaskSpec",
+        "PLAN: 任务理解与拆解",
+        "CODE: 如需要则生成代码",
+        "EXECUTE: 如需要则执行代码",
+        "ERROR_ATTRIBUTION: 如失败则错误归因",
+        "REVIEW: 审查真实产物",
+        "REPORT: 生成最终报告"
+      ],
+      "progress": [
+        {
+          "time": "2026-07-15T00:03:54",
+          "content": "prepare/classify 完成，TaskSpec 已冻结"
+        },
+        {
+          "time": "2026-07-15T00:07:35",
+          "content": "最终验收完成：passed"
+        }
+      ],
+      "errors": [],
+      "artifacts": [
+        {
+          "path": "outputs/runs/20260715_000353/agent_trace.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        },
+        {
+          "path": "outputs/runs/20260715_000353/artifacts/code_pipeline.py",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        },
+        {
+          "path": "outputs/runs/20260715_000353/artifacts/expense_summary.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        },
+        {
+          "path": "outputs/runs/20260715_000353/file_previews.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        },
+        {
+          "path": "outputs/runs/20260715_000353/final_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        },
+        {
+          "path": "outputs/runs/20260715_000353/normalized_input.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        },
+        {
+          "path": "outputs/runs/20260715_000353/review/validation_report.md",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        },
+        {
+          "path": "outputs/runs/20260715_000353/run_state.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        },
+        {
+          "path": "outputs/runs/20260715_000353/task_graph.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        },
+        {
+          "path": "outputs/runs/20260715_000353/task_spec.json",
+          "description": "框架验证的运行产物",
+          "time": "2026-07-15T00:07:35"
+        }
+      ],
+      "review": {
+        "status": "passed",
+        "can_generate_final_report": true,
+        "issues": [],
+        "required_artifacts_checked": [
+          "artifacts/expense_summary.json",
+          "artifacts/code_pipeline.py",
+          "final_report.md",
+          "task_spec.json",
+          "agent_trace.md",
+          "run_state.json",
+          "file_previews.json",
+          "normalized_input.json",
+          "task_graph.json"
+        ]
+      },
+      "finished_at": "2026-07-15T00:07:35"
     }
   ]
 }
