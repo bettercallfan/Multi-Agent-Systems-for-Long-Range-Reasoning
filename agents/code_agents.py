@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import asyncio
 import ast
+import hashlib
+import importlib.util
 from pathlib import Path
 import re
 import sys
 
 from autogen_agentchat.agents import AssistantAgent
 
-from orchestration.schemas import CodeGenerationResult, ExecutionResult
+from orchestration.core.schemas import CodeGenerationResult, ExecutionResult
 
 
 def create_code_modeling_agent(model_client, extra_context: str = ""):
@@ -22,7 +24,7 @@ def create_code_modeling_agent(model_client, extra_context: str = ""):
 你是代码生成组件。严格按照调用方给出的 JSON 契约返回 Python 源码。
 你不能执行代码、写入文件、切换工作目录、修改运行状态或宣称任务完成。
 代码只能使用相对路径 inputs/、artifacts/ 和根目录 normalized_input.json，
-不得包含 cd、绝对路径或 outputs/runs/ 路径。任务插件要求标准化输入时，必须直接读取
+不得包含 cd、绝对路径或 outputs/runs/ 路径。通用输入边界位于根目录
 normalized_input.json，不能改写为 inputs/normalized_input.json。
 只能写入调用方列出的业务产物，绝不能写入 trace、报告、TaskSpec、RunState 或验收报告。
 PDF 使用 pdfplumber；Pandas 使用 `import pandas as pd`。
@@ -63,16 +65,37 @@ def _validate_code(code: str, max_lines: int, allowed_outputs: list[str]) -> Non
         raise ValueError(f"生成代码未通过 Python 编译预检: {exc}") from exc
 
     invalid_imports = []
+    unavailable_imports: set[str] = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             invalid_imports.extend(alias.name for alias in node.names if alias.name == "pd")
             invalid_imports.extend(alias.name for alias in node.names if alias.name == "pypdf")
+            for alias in node.names:
+                top_level = alias.name.split(".", 1)[0]
+                try:
+                    if importlib.util.find_spec(top_level) is None:
+                        unavailable_imports.add(top_level)
+                except (ImportError, ModuleNotFoundError, ValueError):
+                    unavailable_imports.add(top_level)
         elif isinstance(node, ast.ImportFrom) and node.module == "pypdf":
             invalid_imports.append("pypdf")
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            top_level = node.module.split(".", 1)[0]
+            try:
+                if importlib.util.find_spec(top_level) is None:
+                    unavailable_imports.add(top_level)
+            except (ImportError, ModuleNotFoundError, ValueError):
+                unavailable_imports.add(top_level)
     if invalid_imports:
         if "pd" in invalid_imports:
             raise ValueError("生成代码包含无效导入 'import pd'；请使用 'import pandas as pd'")
         raise ValueError("生成代码依赖未声明的 pypdf；请使用项目已有的 pdfplumber")
+    if unavailable_imports:
+        raise ValueError(
+            "生成代码依赖当前运行环境未安装的模块: "
+            + ", ".join(sorted(unavailable_imports))
+            + "；不得在脚本中 pip install，请改用标准库或已安装模块"
+        )
 
     # The model may only create business outputs declared by TaskSpec. Framework
     # files are rejected above; this guard makes the contract visible in errors.
@@ -111,14 +134,51 @@ def list_run_files(run_dir: Path) -> list[str]:
     )
 
 
+def snapshot_run_files(run_dir: Path) -> dict[str, tuple[int, int, str]]:
+    """Capture stable signatures for audit-safe before/after comparisons."""
+    resolved = run_dir.resolve()
+    snapshot: dict[str, tuple[int, int, str]] = {}
+    for relative in list_run_files(resolved):
+        path = resolved / relative
+        stat = path.stat()
+        snapshot[relative] = (
+            stat.st_mtime_ns,
+            stat.st_size,
+            hashlib.sha256(path.read_bytes()).hexdigest(),
+        )
+    return snapshot
+
+
+def changed_run_files(
+    run_dir: Path,
+    before: dict[str, tuple[int, int, str]],
+    allowed_paths: list[str] | None = None,
+) -> list[str]:
+    """Return only files created or content-modified after ``before``."""
+    allowed = set(allowed_paths) if allowed_paths is not None else None
+    after = snapshot_run_files(run_dir)
+    return sorted(
+        relative
+        for relative, signature in after.items()
+        if (allowed is None or relative in allowed)
+        and before.get(relative) != signature
+    )
+
+
 async def execute_code_file(
     run_dir: Path,
     relative_path: str,
     attempt: int,
     timeout_seconds: int = 180,
+    before_snapshot: dict[str, tuple[int, int, str]] | None = None,
 ) -> ExecutionResult:
     """Execute one persisted script and return the real process result."""
     run_dir = run_dir.resolve()
+    before_snapshot = (
+        snapshot_run_files(run_dir)
+        if before_snapshot is None
+        else dict(before_snapshot)
+    )
     script_path = _safe_run_path(run_dir, relative_path)
     if not script_path.exists():
         return ExecutionResult(
@@ -127,8 +187,10 @@ async def execute_code_file(
             command=[sys.executable, relative_path],
             exit_code=127,
             stderr=f"代码文件不存在: {relative_path}",
-            produced_files=list_run_files(run_dir),
+            produced_files=changed_run_files(run_dir, before_snapshot),
         )
+
+    entrypoint_hash_before = hashlib.sha256(script_path.read_bytes()).hexdigest()
 
     command = [sys.executable, relative_path]
     process = await asyncio.create_subprocess_exec(
@@ -146,16 +208,26 @@ async def execute_code_file(
         exit_code = 124
         stderr += f"\n执行超过 {timeout_seconds} 秒，已终止".encode()
 
+    # The persisted entrypoint is an immutable executable input during one
+    # attempt.  A generated wrapper that rewrites itself can otherwise return
+    # exit_code=0 while leaving a different (even invalid) script for terminal
+    # verification and future reproduction.
+    if script_path.is_file():
+        entrypoint_hash_after = hashlib.sha256(script_path.read_bytes()).hexdigest()
+        if entrypoint_hash_after != entrypoint_hash_before:
+            exit_code = 66
+            stderr += (
+                "\n代码执行期间修改了自身入口文件；该结果不可复现，已拒绝。"
+            ).encode()
+    else:
+        exit_code = 66
+        stderr += "\n代码执行期间删除了自身入口文件；该结果不可复现，已拒绝。".encode()
+
     return ExecutionResult(
         attempt=attempt,
         command=command,
         exit_code=exit_code,
         stdout=stdout.decode("utf-8", errors="replace"),
         stderr=stderr.decode("utf-8", errors="replace"),
-        produced_files=list_run_files(run_dir),
+        produced_files=changed_run_files(run_dir, before_snapshot),
     )
-
-
-def create_code_agents(model_client, work_dir):
-    """Compatibility shim: execution is now owned by ``execute_code_file``."""
-    return create_code_modeling_agent(model_client), None

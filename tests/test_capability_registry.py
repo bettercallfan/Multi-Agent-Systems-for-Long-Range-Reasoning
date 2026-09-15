@@ -2,16 +2,16 @@ import unittest
 
 from pydantic import ValidationError
 
-from orchestration.capability_registry import (
+from orchestration.execution.capability_registry import (
     CapabilityNotFoundError,
     CapabilityRegistry,
 )
-from orchestration.node_executor import (
+from orchestration.execution.node_executor import (
     ExecutorDescriptor,
     NodeExecutionContext,
     NodeExecutionResult,
 )
-from orchestration.task_graph import TaskNode
+from orchestration.graph.task_graph import TaskNode
 
 
 class FakeExecutor:

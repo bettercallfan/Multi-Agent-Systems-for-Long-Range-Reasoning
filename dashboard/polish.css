@@ -1,0 +1,149 @@
+/* Final presentation layer. Kept separate from the legacy compact theme. */
+.hero-stats {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.welcome-panel h1 {
+  color: #fff;
+}
+
+.overview-grid > * {
+  min-width: 0;
+}
+
+.preflight.model_name {
+  grid-column: 1 / 3;
+}
+
+.preflight span {
+  white-space: nowrap;
+}
+
+.hero-stat:nth-child(4) {
+  border-right: 0;
+}
+
+.business-progress {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 4px 0 13px;
+}
+
+.business-progress strong,
+.business-progress span {
+  display: block;
+}
+
+.business-progress strong {
+  color: var(--ink);
+  font-size: 42px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.business-progress span {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.business-progress p {
+  margin: 0;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.workunit-distribution {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  margin: 5px 0 14px;
+}
+
+.workunit-distribution div {
+  padding: 11px;
+  border-radius: 5px;
+  background: #f1f5f5;
+  text-align: center;
+}
+
+.workunit-distribution strong,
+.workunit-distribution span {
+  display: block;
+}
+
+.workunit-distribution strong {
+  font-size: 18px;
+}
+
+.workunit-distribution span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 1200px) {
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-stat:nth-child(even) {
+    border-right: 0;
+  }
+
+  .hero-stat:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 760px) {
+  .preflight.model_name {
+    grid-column: auto;
+  }
+  .mini-flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 7px;
+    overflow: visible;
+    width: 100%;
+  }
+
+  .mini-flow div {
+    min-width: 0;
+  }
+
+  .mini-flow i {
+    display: none;
+  }
+
+  .mini-flow span {
+    font-size: 12px;
+  }
+
+  .business-progress {
+    display: block;
+  }
+
+  .business-progress strong {
+    font-size: 36px;
+  }
+
+  .business-progress p {
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+
+  .workunit-distribution {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .workunit-distribution div:last-child {
+    grid-column: 1 / 3;
+  }
+
+  .hero-stat:last-child {
+    grid-column: auto;
+  }
+}

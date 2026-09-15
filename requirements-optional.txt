@@ -1,0 +1,10 @@
+# Optional semantic prompt compression.  Install with:
+#   python -m pip install -r requirements-optional.txt
+#
+# PyTorch's CPU/CUDA build is deployment-specific.  Install the build matching
+# the machine first; this range deliberately preserves either an existing CPU
+# build or an existing CUDA build instead of forcing one hardware backend.
+# The framework falls back to deterministic compression if LLMLingua cannot run.
+torch>=2.1,<3
+transformers>=4.38,<5
+llmlingua==0.2.2

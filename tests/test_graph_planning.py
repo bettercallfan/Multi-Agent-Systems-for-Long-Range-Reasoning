@@ -2,8 +2,8 @@ import unittest
 
 from pydantic import ValidationError
 
-from orchestration.graph_planner import build_fallback_graph, validate_planned_graph
-from orchestration.task_graph import GraphValidationError, NodeStatus
+from orchestration.graph.graph_planner import build_fallback_graph, validate_planned_graph
+from orchestration.graph.task_graph import GraphValidationError, NodeStatus
 
 
 class GraphPlanningTests(unittest.TestCase):

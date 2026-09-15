@@ -7,8 +7,8 @@ import json
 from pathlib import Path
 import re
 
-from orchestration.schemas import ArtifactQualityResult, ReviewDecision
-from task_plugins.base import load_strict_json
+from orchestration.task.artifact_validator import load_strict_json
+from orchestration.core.schemas import ArtifactQualityResult, ReviewDecision
 
 
 _FORBIDDEN_REPORT_PATTERNS = {
@@ -77,12 +77,43 @@ def pre_report_review(
         if quality.status == "failed":
             issues.extend(quality.issues)
 
+    business = run_state.get("business_validation", {})
+    business_status = business.get("status", "unverified")
+    business_mode = (
+        business.get("policy", {}).get("mode")
+        or (business.get("result") or {}).get("mode")
+        or task_spec.get("business_validation", {}).get("mode", "optional")
+    )
+    if business_status in {"failed", "error"}:
+        issues.append(f"独立业务验证未通过：{business_status}")
+    elif business_mode == "required" and business_status != "passed":
+        issues.append(f"必需业务验证尚未通过：{business_status}")
+    acceptance_status = run_state.get(
+        "requirement_acceptance", {}
+    ).get("status", "unverified")
+    acceptance_required = bool(task_spec.get("requirement_contract"))
+    if acceptance_required and acceptance_status != "passed":
+        issues.append(f"强制需求验收尚未闭合：{acceptance_status}")
+    unresolved_blocking = [
+        item for item in run_state.get("blocking_issues", [])
+        if not item.get("resolved", False)
+    ]
+    if unresolved_blocking:
+        issues.extend(
+            "未解决阻断问题：" + str(item.get("description", item))
+            for item in unresolved_blocking
+        )
+
     critical = bool(
         missing
         or any(issue.startswith("JSON 产物无法解析") for issue in issues)
         or (artifact_quality is not None and quality.status == "failed")
         or graph_failed
         or bool(failed_nodes)
+        or business_status in {"failed", "error"}
+        or (business_mode == "required" and business_status != "passed")
+        or (acceptance_required and acceptance_status != "passed")
+        or bool(unresolved_blocking)
     )
     if critical:
         status = "failed"
@@ -99,21 +130,6 @@ def pre_report_review(
         can_generate_final_report=can_report,
         issues=issues,
         required_artifacts_checked=required,
-    )
-
-
-def merge_review_decisions(framework: ReviewDecision, semantic: ReviewDecision) -> ReviewDecision:
-    """Merge decisions conservatively; an LLM can never upgrade framework evidence."""
-    rank = {"passed": 0, "partial": 1, "failed": 2}
-    status = framework.status if rank[framework.status] >= rank[semantic.status] else semantic.status
-    can_report = framework.can_generate_final_report and semantic.can_generate_final_report and status != "failed"
-    return ReviewDecision(
-        status=status,
-        can_generate_final_report=can_report,
-        issues=list(dict.fromkeys(framework.issues + semantic.issues)),
-        required_artifacts_checked=list(dict.fromkeys(
-            framework.required_artifacts_checked + semantic.required_artifacts_checked
-        )),
     )
 
 
@@ -143,7 +159,29 @@ def final_validation(task_spec: dict, run_state: dict) -> ReviewDecision:
         for label, pattern in _FORBIDDEN_REPORT_PATTERNS.items():
             if re.search(pattern, content, re.IGNORECASE):
                 issues.append(f"final_report.md 包含禁止内容：{label}")
-        for reference in set(re.findall(r"artifacts/[\w\-./]+", content)):
+        report_policy = task_spec.get("report_policy", {})
+        if report_policy.get("forbid_unsupported_decisions"):
+            decision_patterns = {
+                "未经授权的最终决定": (
+                    r"(?:最终决定|最终裁决|最终处置结论|直接作出决定|无需复核即可决定)"
+                ),
+                "证据未支持的强制建议": (
+                    r"(?:建议|应当|必须).{0,12}(?:直接执行|立即处置|无需复核)"
+                ),
+            }
+            for label, pattern in decision_patterns.items():
+                if re.search(pattern, content, re.IGNORECASE):
+                    issues.append(f"final_report.md 超出初步核对范围：{label}")
+        # Stop at a known artifact extension.  ``\w`` includes CJK characters,
+        # so the previous greedy expression treated prose immediately after a
+        # path (for example ``result.json实现复算``) as part of the filename.
+        artifact_pattern = (
+            r"artifacts/[\w\-./]+?\."
+            r"(?:json|jsonl|csv|xlsx|xls|md|txt|py|pdf|png|jpg|jpeg|pcap)"
+        )
+        for reference in set(re.findall(
+            artifact_pattern, content, re.IGNORECASE,
+        )):
             clean = reference.rstrip("`。，、；;:：)）]")
             if not (run_dir / clean).exists():
                 issues.append(f"报告引用了不存在的产物：{clean}")
@@ -162,6 +200,31 @@ def final_validation(task_spec: dict, run_state: dict) -> ReviewDecision:
         issues.append("动态任务图执行失败")
     if failed_nodes:
         issues.append("未成功完成的任务图节点：" + ", ".join(failed_nodes))
+    business = run_state.get("business_validation", {})
+    business_status = business.get("status", "unverified")
+    business_mode = (
+        business.get("policy", {}).get("mode")
+        or (business.get("result") or {}).get("mode")
+        or task_spec.get("business_validation", {}).get("mode", "optional")
+    )
+    if business_status in {"failed", "error"}:
+        issues.append(f"独立业务验证未通过：{business_status}")
+    elif business_mode == "required" and business_status != "passed":
+        issues.append(f"必需业务验证尚未通过：{business_status}")
+    acceptance_status = run_state.get(
+        "requirement_acceptance", {}
+    ).get("status", "unverified")
+    if task_spec.get("requirement_contract") and acceptance_status != "passed":
+        issues.append(f"强制需求验收尚未闭合：{acceptance_status}")
+    unresolved_blocking = [
+        item for item in run_state.get("blocking_issues", [])
+        if not item.get("resolved", False)
+    ]
+    if unresolved_blocking:
+        issues.extend(
+            "未解决阻断问题：" + str(item.get("description", item))
+            for item in unresolved_blocking
+        )
     if missing or issues:
         status = "failed"
     elif execution_failed or previous.get("status") == "partial":
@@ -188,6 +251,8 @@ def write_validation_report(run_dir: Path, decision: ReviewDecision, run_state: 
         f"- 代码退出码：{run_state.get('execution', {}).get('exit_code')}",
         f"- 是否允许交付报告：{'是' if decision.can_generate_final_report else '否'}",
         f"- 产物质量：{(run_state.get('artifact_quality', {}).get('current') or {}).get('status', 'unknown')}",
+        f"- 业务验证：{run_state.get('business_validation', {}).get('status', 'unverified')}",
+        f"- 需求验收：{run_state.get('requirement_acceptance', {}).get('status', 'unverified')}",
         f"- 当前失败路由：{(run_state.get('failure') or {}).get('resume_stage', '无')}",
         "",
         "## 必需产物",
@@ -202,20 +267,3 @@ def write_validation_report(run_dir: Path, decision: ReviewDecision, run_state: 
         lines.append("- 未发现阻断性问题")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path.relative_to(run_dir).as_posix()
-
-
-def review_artifacts(task_spec: dict):
-    """Compatibility wrapper that performs final validation from persisted state."""
-    run_dir = Path(task_spec["run_dir"])
-    state_path = run_dir / "run_state.json"
-    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
-    decision = final_validation(task_spec, state)
-    report_path = write_validation_report(run_dir, decision, state)
-    return {
-        "status": decision.status.upper(),
-        "passed": len(decision.required_artifacts_checked) - len([
-            p for p in decision.required_artifacts_checked if not (run_dir / p).is_file()
-        ]),
-        "total": len(decision.required_artifacts_checked),
-        "report_path": str(run_dir / report_path),
-    }

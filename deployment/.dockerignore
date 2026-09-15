@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+!.env.example
+key.md
+**/__pycache__
+**/*.pyc
+**/*.sqlite3
+submission
+outputs/dashboard_jobs
+memory/*
+docs/*.pdf
+docs/*.xdv
+docs/*.log
+docs/*.aux

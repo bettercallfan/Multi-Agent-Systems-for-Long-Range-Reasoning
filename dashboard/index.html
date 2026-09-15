@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>动态异构群体智能演示台</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/polish.css">
+</head>
+<body class="app-shell">
+  <aside class="sidebar">
+    <a class="side-brand" href="#" data-view-link="overview"><span>HX</span><div><strong>群智协同系统</strong><small>XH-202631 比赛演示</small></div></a>
+    <nav class="side-nav" aria-label="主导航">
+      <a class="primary-button" href="/demo" style="margin:8px;text-align:center">进入评审演示 →</a>
+      <button class="active" data-view="overview"><i>⌂</i><span>系统总览</span></button>
+      <button data-view="workspace"><i>▷</i><span>任务工作台</span></button>
+      <button data-view="evidence"><i>✓</i><span>场景证据</span></button>
+      <button data-view="continuity"><i>↻</i><span>长程与恢复</span></button>
+      <button data-view="architecture"><i>⌘</i><span>系统架构</span></button>
+    </nav>
+    <div class="side-status"><span><i></i>服务在线</span><small>只展示可追溯证据</small></div>
+  </aside>
+
+  <div class="app-main">
+    <header class="app-header">
+      <button id="mobile-menu" class="icon-button light" aria-label="打开导航">☰</button>
+      <div><strong id="page-title">系统总览</strong><span id="page-subtitle">比赛验收与运行状态</span></div>
+      <div class="header-actions"><span class="evidence-ready"><i></i>正式证据就绪</span><button id="fullscreen" class="icon-button light" title="全屏演示">⛶</button><button id="refresh" class="icon-button light" title="刷新数据">↻</button></div>
+    </header>
+
+    <main class="view-container">
+      <section class="app-view active" data-page="overview">
+        <div class="welcome-panel">
+          <div><p class="eyebrow">荣耀终端 XH-202631 参赛系统</p><h1>动态异构群体智能协同推理系统</h1><p>面向超长程复杂任务，支持动态任务规划、异构 Agent 协作、断点恢复与确定性验收。</p><div class="welcome-actions"><button class="primary-button" data-open-view="workspace">启动真实任务</button><button class="secondary-button" data-open-view="evidence">核验运行证据</button></div></div>
+          <div class="audit-seal"><span>当前交付状态</span><strong>PASS</strong><small id="updated-at">正在载入</small></div>
+        </div>
+        <div id="hero-stats" class="hero-stats"><div class="loading">正在读取正式证据...</div></div>
+        <div class="overview-grid">
+          <div class="surface overview-story"><div class="panel-title"><div><p class="eyebrow">核心执行链路</p><h2>从任务意图到可信交付</h2></div><span>全过程可追踪</span></div><div class="mini-flow"><div><b>01</b><span>任务理解</span></div><i>→</i><div><b>02</b><span>动态规划</span></div><i>→</i><div><b>03</b><span>异构协同</span></div><i>→</i><div><b>04</b><span>业务验收</span></div><i>→</i><div><b>05</b><span>报告交付</span></div></div></div>
+          <div class="overview-highlight"><span class="highlight-label">最新可复核证据</span><h2>城市真实业务千步运行</h2><p>1000 个真实数据 WorkUnit 全部完成，第 500 步签名恢复，10 次阶段模型推理，完整审计 9/9 通过。</p><button class="text-button" data-open-view="continuity">查看长程证据</button></div>
+        </div>
+      </section>
+
+      <section class="app-view" data-page="workspace">
+        <div class="page-heading"><div><p class="eyebrow">受控真实执行</p><h1>任务工作台</h1><p>选择预设场景，检查运行环境并观察任务的真实执行过程。</p></div><span id="runtime-badge" class="mode-badge">检查运行环境</span></div>
+        <div class="workspace-grid">
+          <div class="surface task-setup">
+            <div class="panel-title"><div><h2>新建演示任务</h2><p>输入路径已锁定，前端不接受任意命令。</p></div><span class="step-mark">01</span></div>
+            <label>场景类型</label>
+            <div id="scenario-selector" class="segmented">
+              <button class="active" data-scenario="mathorcup"><strong>MathorCup</strong><span>三维装箱优化</span></button>
+              <button data-scenario="expense"><strong>差旅报销</strong><span>跨文档核验</span></button>
+              <button data-scenario="urban"><strong>城市多模态</strong><span>数据治理画像</span></button>
+              <button data-scenario="urban_long"><strong>千步长程</strong><span>真实数据与恢复</span></button>
+              <button data-scenario="mathorcup_long"><strong>MathorCup 千步</strong><span>1000 候选优化</span></button>
+              <button data-scenario="recovery_demo"><strong>动态注入</strong><span>失效、变更与异常</span></button>
+            </div>
+            <div class="field-row"><label for="task-input">输入目录</label><input id="task-input" value="examples/mathorcup_d" readonly></div>
+            <div class="field-row"><label for="execution-token">执行口令</label><input id="execution-token" type="password" placeholder="输入服务启动时生成的口令" autocomplete="off"></div>
+            <div id="preflight-checks" class="preflight-list"><div class="loading">正在执行非敏感预检...</div></div>
+            <div class="launch-row"><button id="launch-run" class="primary-button" disabled>启动真实任务</button><span id="launch-status">正在检查执行权限...</span></div>
+          </div>
+          <div class="surface live-run">
+            <div class="panel-title"><div><h2>实时执行</h2><p id="job-caption">尚未启动任务</p></div><span id="job-status" class="status-chip idle">待命</span></div>
+            <div class="stage-track" id="stage-track"><div class="active"><i>1</i><span>准备</span></div><div><i>2</i><span>理解</span></div><div><i>3</i><span>规划</span></div><div><i>4</i><span>执行</span></div><div><i>5</i><span>审查</span></div><div><i>6</i><span>交付</span></div></div>
+            <div class="job-facts"><div><span>当前阶段</span><strong id="current-stage">等待任务</strong></div><div><span>当前节点</span><strong id="current-node">-</strong></div><div><span>运行目录</span><strong id="current-run">-</strong></div></div>
+            <div class="log-head"><span>实时日志</span><button id="cancel-job" class="danger-button" hidden>终止任务</button></div>
+            <pre id="live-log">任务启动后，执行日志和 RunState 状态会显示在这里。</pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="app-view" data-page="evidence">
+        <div class="page-heading"><div><p class="eyebrow">跨领域验证</p><h1>三场景验收证据</h1><p>每项通过结论均可追溯到运行状态、领域验证、需求账本和最终报告。</p></div></div>
+        <div class="evidence-layout"><aside id="scenario-cards" class="scenario-grid"></aside><div class="surface scenario-workspace"><div id="scenario-heading" class="scenario-heading"></div><div class="tabs" role="tablist"><button class="active" data-tab="gates">验收闸门</button><button data-tab="graph">任务图</button><button data-tab="artifacts">交付产物</button><button data-tab="metrics">运行指标</button><button data-tab="memory">记忆与通信</button></div><div id="scenario-detail" class="tab-content"><div class="loading">请选择场景</div></div></div></div>
+      </section>
+
+      <section class="app-view" data-page="continuity">
+        <div class="page-heading"><div><p class="eyebrow">长程连续性与恢复</p><h1>千步任务与故障恢复</h1><p>以持久化账本、签名 checkpoint 和独立审计证明任务连续性。</p></div></div>
+        <div class="long-horizon-lead"><div class="surface feature-panel business-proof"><div class="panel-title"><div><p class="eyebrow">正式业务运行</p><h2>城市真实数据 1000 步任务</h2></div><span class="status-chip success">9/9 通过</span></div><div id="business-horizon-panel"></div></div></div>
+        <div class="surface recovery-panel"><div class="panel-title"><div><p class="eyebrow">自动修复实证</p><h2>失败定位、局部重放与复验</h2><p>同一次成功运行中的失败、归因、重新执行与最终交付。</p></div><span class="status-chip success">已恢复</span></div><div id="recovery-summary" class="recovery-summary"></div><div id="recovery-timeline" class="timeline"></div><p class="evidence-note">时间线由运行 <code>20260908_173502/run_state.json</code> 确定性导出。</p></div>
+        <div class="two-column supporting-evidence"><div class="surface feature-panel"><div class="panel-title"><div><p class="eyebrow">补充连续性证据</p><h2>调度与恢复压力测试</h2></div></div><div id="horizon-panel"></div></div><div class="surface feature-panel"><div class="panel-title"><div><p class="eyebrow">端边云协同</p><h2>异构资源路由</h2></div></div><div id="resource-panel"></div></div></div>
+      </section>
+
+      <section class="app-view" data-page="architecture">
+        <div class="page-heading"><div><p class="eyebrow">系统架构</p><h1>动态异构群体智能架构</h1><p>模型承担语义理解和专业推理，确定性控制面负责状态推进、真实执行与成功判定。</p></div></div>
+        <div class="architecture-stack">
+          <section><header><span>01</span><div><strong>语义智能层</strong><p>理解任务目标，生成专业推理与执行建议</p></div></header><div><b>任务理解 Agent</b><b>层级规划 Agent</b><b>领域分析 Agent</b><b>代码生成 Agent</b></div></section>
+          <section><header><span>02</span><div><strong>协同控制层</strong><p>组织动态拓扑、记忆唤醒、低熵通信和故障恢复</p></div></header><div><b>动态任务图</b><b>能力路由</b><b>长程记忆</b><b>直接依赖通信</b><b>子图重放</b></div></section>
+          <section><header><span>03</span><div><strong>可信执行层</strong><p>以真实工具和确定性校验控制最终交付</p></div></header><div><b>文件与代码执行</b><b>领域验证器</b><b>证据核验</b><b>需求账本</b><b>报告门禁</b></div></section>
+        </div>
+        <div class="architecture-notes"><div><span>动态拓扑</span><strong>任务语义决定节点和依赖</strong><p>不同场景生成不同 DAG，不依赖固定 Agent 串联。</p></div><div><span>可信控制面</span><strong>模型不能自行宣告成功</strong><p>最终结果由领域验证、需求账本与九项审计共同判定。</p></div><div><span>能力边界</span><strong>实测与模拟清晰分离</strong><p>端边云为可替换资源后端，业务长程和压力测试分别留证。</p></div></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="artifact-dialog"><div class="dialog-head"><div><strong id="artifact-title">产物预览</strong><small id="artifact-meta"></small></div><button id="close-dialog" class="icon-button light" aria-label="关闭">×</button></div><pre id="artifact-content"></pre></dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

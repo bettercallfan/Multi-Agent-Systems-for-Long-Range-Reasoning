@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "status": "passed",
+  "task_type": "math_modeling",
+  "goal": "在完整覆盖货物且满足装载约束的前提下，持续搜索低成本三维装箱方案并保持证据链可复算",
+  "goal_digest": "cda9421183afd42f5abe8e4587a4448d134b9229cefbc2d419cfadb374b0f988",
+  "business_steps": 1000,
+  "resume_checkpoint": "checkpoints/epoch-0020.json",
+  "selected_candidate": {
+    "scenario": "candidate_0008",
+    "candidate_index": 8,
+    "mode": "v2_only",
+    "configuration": {
+      "candidate_index": 8,
+      "mode": "v2_only",
+      "sort_key": "weight",
+      "descending": true,
+      "seed": 8,
+      "v1_share_percent": 63
+    },
+    "feasible": true,
+    "placement_count": 300,
+    "vehicle_count": 5,
+    "total_cost": 3500.0,
+    "space_utilization_rate": 0.13798319327731093,
+    "load_utilization_rate": 0.0822,
+    "placement_digest": "ada8095f1ad1b0ce6477120c17e0eeacd692102a5d2e6c49494e81af6805068d"
+  },
+  "search_validation": {
+    "status": "passed",
+    "passed": true,
+    "failures": [],
+    "completed_steps": 1000,
+    "unique_steps": 1000,
+    "duplicate_executions": 0,
+    "goal_preserved": true,
+    "checkpoint_count": 40,
+    "resume_after_step": 500,
+    "resume_checkpoint_valid": true,
+    "feasible_candidates": 1000,
+    "final_chain_digest": "91a014f397dc9b1ca59ae433dd4c1351a117c74f1112e3f53f9ad6074c3b6c87"
+  },
+  "stage_reviews": [],
+  "started_at": "2026-09-11T11:06:12",
+  "finished_at": "2026-09-11T11:06:28",
+  "run_dir": "outputs/runs/20260911_mathorcup_business_1000",
+  "audit_passed": true
+}

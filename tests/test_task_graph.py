@@ -3,7 +3,7 @@ import unittest
 
 from pydantic import ValidationError
 
-from orchestration.task_graph import (
+from orchestration.graph.task_graph import (
     GraphValidationError,
     InvalidNodeTransitionError,
     NodeStatus,
@@ -63,6 +63,23 @@ class TaskGraphValidationTests(unittest.TestCase):
         graph = TaskGraph(graph_id="g", goal="x", nodes=[node("A")])
         with self.assertRaises(GraphValidationError):
             graph.validate_graph({"code"})
+
+    def test_dependency_field_contract_only_targets_direct_dependencies(self):
+        valid = TaskNode(
+            node_id="B", description="consume A", capability="analysis",
+            dependencies=["A"],
+            dependency_fields={"A": ["/structured_output/amount"]},
+            success_criteria=[{"type": "node_result"}],
+        )
+        self.assertEqual(
+            valid.dependency_fields["A"], ["/structured_output/amount"],
+        )
+        with self.assertRaises(ValidationError):
+            TaskNode(
+                node_id="B", description="bad", capability="analysis",
+                dependencies=["A"], dependency_fields={"C": ["/summary"]},
+                success_criteria=[{"type": "node_result"}],
+            )
 
     def test_failed_dependency_blocks_all_descendants(self):
         graph = TaskGraph(

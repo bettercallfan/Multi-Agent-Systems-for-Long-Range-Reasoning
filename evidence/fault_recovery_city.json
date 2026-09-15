@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "evidence_policy": "Only complete run_audit PASS runs are exported.",
+  "runs": [
+    {
+      "run_id": "20260908_124006",
+      "task_type": "math_modeling",
+      "audit": "PASS",
+      "outcome": "success",
+      "final_report": "final_report.md"
+    },
+    {
+      "run_id": "20260908_125323",
+      "task_type": "document_analysis",
+      "audit": "PASS",
+      "outcome": "success",
+      "final_report": "final_report.md"
+    },
+    {
+      "run_id": "20260908_173502",
+      "task_type": "general_complex_task",
+      "audit": "PASS",
+      "outcome": "success",
+      "final_report": "final_report.md"
+    }
+  ],
+  "urban_fault_recovery": {
+    "run_id": "20260908_173502",
+    "repair_rounds": 1,
+    "timeline": [
+      {
+        "sequence": 149,
+        "time": "2026-09-08T17:48:53",
+        "event": "task_graph_finished",
+        "status": "failed",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 153,
+        "time": "2026-09-08T17:48:58",
+        "event": "business_validation_recorded",
+        "status": "failed",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": [
+          "urban_multimodal"
+        ]
+      },
+      {
+        "sequence": 156,
+        "time": "2026-09-08T17:48:58",
+        "event": "business_repair_started",
+        "status": "repaired",
+        "round": 1,
+        "target_node_ids": [
+          "code_pipeline_exec"
+        ],
+        "affected_node_ids": [
+          "code_pipeline_exec",
+          "terminal_execution",
+          "evidence_verification",
+          "artifact_validation"
+        ],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 164,
+        "time": "2026-09-08T17:49:04",
+        "event": "code_business_repair_fallback_executed",
+        "status": null,
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 186,
+        "time": "2026-09-08T17:49:20",
+        "event": "task_graph_finished",
+        "status": "success",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 188,
+        "time": "2026-09-08T17:49:24",
+        "event": "business_validation_recorded",
+        "status": "passed",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 201,
+        "time": "2026-09-08T17:49:25",
+        "event": "business_repair_finished",
+        "status": "repaired",
+        "round": 1,
+        "target_node_ids": [
+          "code_pipeline_exec"
+        ],
+        "affected_node_ids": [
+          "code_pipeline_exec",
+          "terminal_execution",
+          "evidence_verification",
+          "artifact_validation"
+        ],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 203,
+        "time": "2026-09-08T17:49:26",
+        "event": "task_graph_finished",
+        "status": "success",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 208,
+        "time": "2026-09-08T17:49:58",
+        "event": "review_recorded",
+        "status": "passed",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 215,
+        "time": "2026-09-08T17:50:47",
+        "event": "task_graph_finished",
+        "status": "success",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 217,
+        "time": "2026-09-08T17:50:48",
+        "event": "review_recorded",
+        "status": "passed",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 218,
+        "time": "2026-09-08T17:50:48",
+        "event": "delivery_outcome_recorded",
+        "status": "passed",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      },
+      {
+        "sequence": 221,
+        "time": "2026-09-08T17:51:16",
+        "event": "run_finished",
+        "status": "success",
+        "round": null,
+        "target_node_ids": [],
+        "affected_node_ids": [],
+        "failed_required_checks": []
+      }
+    ],
+    "final_outcome": "success"
+  },
+  "limitations": [
+    "The 1000-step evidence is deterministic scheduler/checkpoint testing, not 1000 LLM calls.",
+    "Device-edge-cloud resources are simulated replaceable backends, not a physical cluster.",
+    "Remote-sensing evidence covers metadata/captions rather than pixel-level inference.",
+    "PCAP processing is limited to packet-header statistics."
+  ]
+}

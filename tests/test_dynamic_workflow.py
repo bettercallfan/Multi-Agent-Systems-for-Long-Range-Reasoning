@@ -5,13 +5,32 @@ import unittest
 
 from autogen_ext.models.replay import ReplayChatCompletionClient
 
-from orchestration.run_state import RunState
-from orchestration.workflow import run_explicit_workflow
+from orchestration.core.run_state import RunState
+from orchestration.graph.task_graph import TaskGraph
+from orchestration.core.workflow import _build_graph_plan, run_explicit_workflow
 
 
 SEMANTIC_REVIEW = {
     "blocking_issues": [], "advisory_issues": [], "evidence_references": [],
     "repair_recommended": False, "repair_target": "none",
+}
+
+ANALYSIS_RESULT = {
+    "summary": "任务目标和约束已根据标准化输入完成核对。",
+    "findings": ["任务要求执行受框架控制的动态任务图并生成验证报告。"],
+    "evidence_refs": ["normalized_input.json"],
+    "risks": [],
+    "confidence": 0.9,
+}
+
+TASK_UNDERSTANDING_RESULT = {
+    "summary": "分析输入任务并形成经过验证的报告。",
+    "goals": ["完成输入分析", "生成最终报告"],
+    "constraints": ["状态推进由 Python 框架控制"],
+    "ambiguities": [],
+    "risk_flags": [],
+    "recommended_capabilities": ["analysis", "artifact_validation"],
+    "confidence": 0.95,
 }
 
 REPORT = """# 任务理解
@@ -58,10 +77,24 @@ def graph_with_missing_declared_output():
 
 
 class DynamicWorkflowTests(unittest.IsolatedAsyncioTestCase):
+    def test_graph_plan_flags_are_derived_from_validated_nodes(self):
+        graph_payload = valid_no_code_graph()
+        graph_payload["nodes"][0]["capability"] = "code"
+        graph_payload["nodes"][1]["capability"] = "reasoning"
+        graph = TaskGraph.model_validate(graph_payload)
+
+        plan = _build_graph_plan(graph, ["code", "reasoning"])
+
+        self.assertTrue(plan["requires_code"])
+        self.assertTrue(plan["use_reasoning"])
+        self.assertFalse(plan["use_research"])
+        self.assertEqual(plan["edge_count"], 1)
+        self.assertEqual(plan["topology_density"], 0.5)
+
     def make_spec_and_state(self, run_dir: Path):
         spec = {
             "task_id": "dynamic_test", "task_name": "动态无代码任务",
-            "task_type": "document_analysis", "plugin_id": "generic",
+            "task_type": "document_analysis",
             "run_dir": str(run_dir),
             "input": {"type": "text", "files": [], "text": "分析任务"},
             "file_previews": [],
@@ -97,7 +130,7 @@ class DynamicWorkflowTests(unittest.IsolatedAsyncioTestCase):
             client = ReplayChatCompletionClient([
                 json.dumps(invalid_unknown_capability_graph(), ensure_ascii=False),
                 json.dumps(valid_no_code_graph(), ensure_ascii=False),
-                "节点分析结论：任务目标和约束明确，后续只需要确定性产物校验。",
+                json.dumps(ANALYSIS_RESULT, ensure_ascii=False),
                 json.dumps(SEMANTIC_REVIEW, ensure_ascii=False),
                 REPORT,
             ])
@@ -107,6 +140,8 @@ class DynamicWorkflowTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(decision.status, "passed", decision.issues)
             current = state.to_dict()
             self.assertEqual(current["plan"]["execution_mode"], "task_graph")
+            self.assertFalse(current["plan"]["requires_code"])
+            self.assertEqual(current["plan"]["edge_count"], 1)
             self.assertEqual(current["graph_outcome"], "success")
             self.assertFalse(current["fallback"]["triggered"])
             self.assertEqual([item["selected_executor_id"] for item in current["routing"]], [
@@ -115,8 +150,51 @@ class DynamicWorkflowTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(current["communication"]["dependency_edges_used"], [["analyze", "validate"]])
             self.assertEqual(current["communication"]["full_history_broadcasts"], 0)
             self.assertEqual(len(client.create_calls), 5)
+            self.assertEqual(current["model_calls"]["count"], 5)
+            self.assertEqual(len(current["model_calls"]["calls"]), 5)
+            self.assertGreater(current["model_calls"]["prompt_tokens_estimated"], 0)
+            self.assertEqual(current["model_calls"]["prompt_budget_violations"], 0)
+            self.assertEqual(
+                current["nodes"]["analyze"]["result"]["structured_output"]
+                ["quality_signal"]["status"],
+                "passed",
+            )
+            self.assertTrue(all(
+                call["prompt_budget_tokens"] in {5000, 8000}
+                for call in current["model_calls"]["calls"]
+            ))
             event_types = [event["type"] for event in current["events"]]
             self.assertEqual(event_types.count("task_graph_validation_failed"), 1)
+
+    async def test_task_understanding_agent_is_called_before_planner(self):
+        with tempfile.TemporaryDirectory() as directory:
+            run_dir = Path(directory)
+            spec, state = self.make_spec_and_state(run_dir)
+            spec["task_understanding_policy"] = {
+                "enabled": True,
+                "max_preview_chars_per_file": 1500,
+            }
+            spec["memory_policy"] = {"enabled": False}
+            state.configure(spec)
+            client = ReplayChatCompletionClient([
+                json.dumps(TASK_UNDERSTANDING_RESULT, ensure_ascii=False),
+                json.dumps(valid_no_code_graph(), ensure_ascii=False),
+                json.dumps(ANALYSIS_RESULT, ensure_ascii=False),
+                json.dumps(SEMANTIC_REVIEW, ensure_ascii=False),
+                REPORT,
+            ])
+
+            decision, _ = await run_explicit_workflow(spec, state, client)
+
+            self.assertEqual(decision.status, "passed", decision.issues)
+            understanding_path = run_dir / "planning" / "task_understanding.json"
+            self.assertTrue(understanding_path.is_file())
+            understanding = json.loads(understanding_path.read_text(encoding="utf-8"))
+            self.assertEqual(understanding["status"], "completed")
+            self.assertEqual(understanding["goals"], TASK_UNDERSTANDING_RESULT["goals"])
+            event_types = [event["type"] for event in state.get("events")]
+            self.assertIn("task_understanding_recorded", event_types)
+            self.assertEqual(len(client.create_calls), 5)
 
     async def test_two_invalid_graphs_use_valid_deterministic_fallback(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -125,7 +203,7 @@ class DynamicWorkflowTests(unittest.IsolatedAsyncioTestCase):
             client = ReplayChatCompletionClient([
                 json.dumps(invalid_unknown_capability_graph(), ensure_ascii=False),
                 json.dumps(invalid_unknown_capability_graph(), ensure_ascii=False),
-                "确定性回退图的分析节点已经完成任务目标和约束分析。",
+                json.dumps(ANALYSIS_RESULT, ensure_ascii=False),
                 json.dumps(SEMANTIC_REVIEW, ensure_ascii=False),
                 REPORT,
             ])
@@ -167,6 +245,7 @@ class DynamicWorkflowTests(unittest.IsolatedAsyncioTestCase):
             self.assertFalse((run_dir / "final_report.md").exists())
             # Planning + analysis only: neither semantic review nor report was called.
             self.assertEqual(len(client.create_calls), 2)
+            self.assertEqual(current["model_calls"]["count"], 2)
 
 
 if __name__ == "__main__":

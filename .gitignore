@@ -5,6 +5,8 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.venv/
+venv/
 
 # Runtime outputs
 outputs/
@@ -14,10 +16,12 @@ artifacts/
 runs/
 logs/
 *.log
+memory/*.json
 
 # Secrets / local config
 .env
 .env.*
+!.env.example
 key.md
 *.key
 *.pem
@@ -45,4 +49,23 @@ temp/
 # Strange local path / drive marker
 B:
 B:/
-key.md
+
+# Local submission bundles, private datasets and agent workspace metadata
+/submission/
+/submission_backups/
+/XH-202631_动态异构群体智能系统*/
+/XH-202631_动态异构群体智能系统*.zip
+/XH-202631_动态异构群体智能系统*.zip.sha256
+/最终版*/
+/城市多模态数据集/
+/memory/
+/.claude/
+
+# LaTeX build intermediates (keep source, figures and intended PDF outputs)
+/docs/*.aux
+/docs/*.fdb_latexmk
+/docs/*.fls
+/docs/*.out
+/docs/*.toc
+/docs/*.xdv
+/docs/*.synctex.gz

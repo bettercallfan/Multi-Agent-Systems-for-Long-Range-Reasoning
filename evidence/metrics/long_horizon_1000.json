@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-09-08T15:01:23",
+  "status": "passed",
+  "run_dir": "outputs/stress/20260908_145548",
+  "total_steps": 1000,
+  "resume_after_step": 500,
+  "completed_steps": 1000,
+  "unique_executed_steps": 1000,
+  "duplicate_executions": 0,
+  "execution_order_preserved": true,
+  "goal_preserved": true,
+  "resume_supported": true,
+  "checkpoint_integrity_algorithm": "sha256",
+  "checkpoint_count": 40,
+  "horizon_epochs": 40,
+  "logical_event_steps": 2039,
+  "elapsed_seconds": 334.902,
+  "resume_checkpoint": "checkpoints/epoch-0020.json",
+  "final_checkpoint": "checkpoints/epoch-0040.json"
+}

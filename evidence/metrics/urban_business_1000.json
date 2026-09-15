@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "status": "passed",
+  "goal": "对城市四模态数据完成隐私保护的长程治理画像，保持全局目标、来源覆盖和证据链不漂移",
+  "goal_digest": "b8c0b5c8dd8fcc8b6148856ca268678206a2997dfc9ce82f4d1b42e9c0128c8a",
+  "task_type": "urban_long_horizon_governance",
+  "business_steps": 1000,
+  "resume_checkpoint": "checkpoints/epoch-0020.json",
+  "validation": {
+    "status": "passed",
+    "passed": true,
+    "failures": [],
+    "completed_steps": 1000,
+    "unique_steps": 1000,
+    "duplicate_executions": 0,
+    "goal_preserved": true,
+    "checkpoint_count": 40,
+    "resume_after_step": 500,
+    "resume_checkpoint_valid": true,
+    "live_reasoning_calls": 10,
+    "modality_work_units": {
+      "remote_sensing": 250,
+      "law_articles": 250,
+      "phone_network": 200,
+      "network_traffic": 200,
+      "cross_modal_synthesis": 100
+    },
+    "source_totals": {
+      "remote_records": 511,
+      "law_records": 80000,
+      "phone_records": 80000,
+      "pcap_packets": 500000
+    },
+    "final_chain_digest": "39b63871d520a7b05b737733950da9902a7b4c4dc4a92db0e875e3eea1742395"
+  },
+  "live_reasoning_results": [
+    {
+      "stage": 10,
+      "role": "GovernanceReasoningAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：当前仅覆盖遥感模态（9单元），话题提及分散（火情最高14次，水情10次），隐私边界合规。证据依据：9条记录全有效，含文本描述，无因果推断。风险边界：单模态导致四模态全局目标覆盖不足，存在画像漂移风险。下一步建议：补充交通、社会等缺失模态数据，平衡来源覆盖，维护证据链完整性，确保隐私保护前提下推进长程治理。",
+      "prompt_tokens": 1024,
+      "completion_tokens": 2287,
+      "duration_seconds": 23.408
+    },
+    {
+      "stage": 20,
+      "role": "ConsistencyCriticAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：仅覆盖遥感模态（9源），缺失其余三模态，偏离全局四模态目标。证据依据：9条摘要有效记录，话题分布不均，水提及频次高，无火灾。隐私边界保持完好，无不当因果断言。风险边界：单模态导致治理画像片面，长程分析存在偏差隐患。下一步建议：立即补充其余三模态数据源，均衡话题分布，强化跨模态一致性校验，在确保隐私保护前提下推进证据链完整性，避免目标漂移。",
+      "prompt_tokens": 1022,
+      "completion_tokens": 6634,
+      "duration_seconds": 48.323
+    },
+    {
+      "stage": 30,
+      "role": "GovernanceReasoningAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：30/100阶段，数据覆盖集中于法律模态，尚未完成四模态全景画像。证据依据：9个来源单元，各含320条有效法律记录。状态分布差异大，部分源存在高比例废止或修改。主题标签显示生态、应急等类别稀疏。风险边界：隐私边界已保全，无跨模态因果断言。下一步建议：拓展非法律模态数据采集，均衡多源覆盖，动态追踪法规效力变更，维护证据链完整性与全局目标一致。",
+      "prompt_tokens": 1188,
+      "completion_tokens": 6565,
+      "duration_seconds": 47.215
+    },
+    {
+      "stage": 40,
+      "role": "ConsistencyCriticAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：当前聚焦行政法规模态，9 个源单元各 320 条有效记录，隐私边界保持完好。证据依据显示来源覆盖单一，状态存在有效、修改及废止差异，主题涵盖城市、生态等。风险边界在于多模态覆盖不足可能影响全局画像完整性，法规时效性需关注。下一步建议：拓展非法律模态数据接入，确保四模态均衡；交叉验证法规状态变更一致性，维持证据链不漂移，推进至下一阶段治理目标。",
+      "prompt_tokens": 1200,
+      "completion_tokens": 3952,
+      "duration_seconds": 29.63
+    },
+    {
+      "stage": 50,
+      "role": "GovernanceReasoningAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：任务过半，现有9个法律模态源单元，各含320条有效司法解释。生态、安全等话题有分布，城市话题为零。法规状态包含有效、修改及废止。\n证据依据：隐私边界未越界，无跨模态因果断言。\n风险边界：模态单一影响画像全面性，城市维度覆盖不足。\n下一步建议：拓展多模态数据源，补足城市主题样本，维持隐私保护机制，确保证据链连续性与全局目标一致。",
+      "prompt_tokens": 1245,
+      "completion_tokens": 2836,
+      "duration_seconds": 30.97
+    },
+    {
+      "stage": 60,
+      "role": "ConsistencyCriticAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：当前仅覆盖电话网络模态，多模态均衡性不足。证据依据：9个源单元全为phone_network，每单元400条记录，无原始标识符，隐私边界完好。风险边界：地理信息缺失率波动（6-33条），单模态数据限制全域画像深度。下一步建议：补充剩余三模态数据，优化地理字段完整度，持续校验隐私合规与证据链一致性，防止目标漂移。",
+      "prompt_tokens": 1124,
+      "completion_tokens": 2756,
+      "duration_seconds": 27.103
+    },
+    {
+      "stage": 70,
+      "role": "GovernanceReasoningAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：仅聚合电话网络模态数据（9源），未覆盖四模态目标。证据显示无原始标识符泄露，隐私边界完好，但地理缺失量差异大（最高400条）。风险在于单模态限制画像全面性，空间信息不足影响治理精度。下一步建议：补充其他模态数据，重点核查高缺失记录地理信息，确保证据链完整且不漂移，持续强化隐私合规，推进长程治理任务。",
+      "prompt_tokens": 1122,
+      "completion_tokens": 4357,
+      "duration_seconds": 39.981
+    },
+    {
+      "stage": 80,
+      "role": "ConsistencyCriticAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：9个网络流量源数据高度一致，包量稳定且无畸形，未提取原始地址或载荷，隐私边界完好。证据依据：当前仅覆盖网络模态，缺失其他城市模态数据。风险边界：单模态数据不足以支撑全局多模态治理画像，存在目标达成度不足风险。下一步建议：补充视频、传感等异构模态数据，优化来源覆盖结构，修复证据链缺口，确保终局画像完整性与合规性。",
+      "prompt_tokens": 1268,
+      "completion_tokens": 3293,
+      "duration_seconds": 40.0
+    },
+    {
+      "stage": 90,
+      "role": "GovernanceReasoningAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：网络模态覆盖9源，协议以ICMP/UDP为主，无畸形包。证据依据：9条摘要显示packet_count=2500，未做载荷检查及IP输出。风险边界：仅单模态，四模态画像不全；隐私合规，无因果越界。下一步建议：补齐视频、音频及传感数据，确保来源覆盖完整；维持隐私策略，验证多模态融合一致性，推进至第100阶段完成治理画像。",
+      "prompt_tokens": 1265,
+      "completion_tokens": 5185,
+      "duration_seconds": 46.408
+    },
+    {
+      "stage": 100,
+      "role": "ConsistencyCriticAgent",
+      "model": "qwen3.5-35b-a3b",
+      "content": "阶段发现：9个网络流量源单元证据链闭合，协议分布稳定，无畸形包。隐私保护达标，未暴露原始IP及内容。\n证据依据：9条哈希摘要一致，流量统计趋同，隐私边界校验通过。\n风险边界：当前仅覆盖网络模态，与四模态目标存在缺口；已规避跨模态因果断言。\n下一步建议：基于现有数据生成治理报告；评估是否需补充非网络模态数据以满足完整性要求。",
+      "prompt_tokens": 1261,
+      "completion_tokens": 5888,
+      "duration_seconds": 41.915
+    }
+  ],
+  "started_at": "2026-09-09T16:00:29",
+  "finished_at": "2026-09-09T16:06:58",
+  "run_dir": "outputs/runs/20260909_urban_business_1000",
+  "audit_passed": true
+}

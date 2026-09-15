@@ -145,7 +145,11 @@ def read_file_preview(path: str):
     }
 
     try:
-        text = Path(path).read_text(encoding="utf-8", errors="ignore")
+        # Preview only a bounded prefix. Large JSONL/CSV files and binary
+        # captures must never be loaded wholesale merely for classification.
+        with Path(path).open("rb") as stream:
+            prefix = stream.read(20_000)
+        text = prefix.decode("utf-8-sig", errors="ignore")
         result["status"] = "success"
         result["text_preview"] = text[:5000]
     except Exception as e:
@@ -157,9 +161,29 @@ def read_file_preview(path: str):
 
 def build_file_previews(files):
     previews = []
+    paths = [Path(file_path) for file_path in files]
+    json_paths = [path for path in paths if path.suffix.lower() == ".json"]
+    aggregated_json: set[Path] = set()
+    if len(json_paths) > 100:
+        sample_paths = sorted(json_paths)[:3]
+        sample_previews = [read_file_preview(str(path)) for path in sample_paths]
+        previews.append({
+            "path": str(json_paths[0].parent / "*.json"),
+            "type": "json_collection",
+            "status": "success",
+            "file_count": len(json_paths),
+            "sample_files": [path.name for path in sample_paths],
+            "text_preview": "\n".join(
+                item.get("text_preview", "")[:1500] for item in sample_previews
+            )[:5000],
+            "error": "",
+        })
+        aggregated_json = set(json_paths)
 
-    for file_path in files:
-        previews.append(read_file_preview(file_path))
+    for path in paths:
+        if path in aggregated_json:
+            continue
+        previews.append(read_file_preview(str(path)))
 
     return previews
 

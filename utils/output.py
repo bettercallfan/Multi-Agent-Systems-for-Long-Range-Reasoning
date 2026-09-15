@@ -21,9 +21,12 @@ def content_to_text(content: Any) -> str:
     if isinstance(content, str):
         return content
     if isinstance(content, BaseModel):
-        return json.dumps(content.model_dump(), ensure_ascii=False, indent=2)
+        return json.dumps(content.model_dump(), ensure_ascii=False, indent=2, default=str)
     if isinstance(content, (dict, list)):
-        return json.dumps(content, ensure_ascii=False, indent=2)
+        # Tool agents may return multimodal lists containing image wrapper
+        # objects.  Traces retain their textual metadata without attempting to
+        # serialise binary pixels or failing the already-completed tool call.
+        return json.dumps(content, ensure_ascii=False, indent=2, default=str)
     return str(content)
 
 
@@ -33,24 +36,6 @@ def get_last_content(messages) -> Any:
         if content is not None and content_to_text(content).strip():
             return content
     return ""
-
-
-def get_last_text_message(messages):
-    return content_to_text(get_last_content(messages))
-
-
-def get_last_text_from_source(messages, source_name):
-    for message in reversed(messages):
-        if getattr(message, "source", "") == source_name:
-            text = content_to_text(getattr(message, "content", ""))
-            if text.strip():
-                return text
-    return ""
-
-
-def get_final_report(messages):
-    report = get_last_text_from_source(messages, "ReportAgent")
-    return report or get_last_text_message(messages)
 
 
 def save_agent_trace(messages, path="outputs/agent_trace.md"):
